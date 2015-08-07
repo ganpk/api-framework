@@ -39,7 +39,7 @@ class Code
      */
     public static $AUTH_PACK_DATA_FAIL = ['code'  => '-4','msg' => 'authorise the pack data fail'];
     
-    //TODO:code能否根据规则自动生成，msg根据变量注释生成，code是否真的有必要存在
+    //TODO:code能否根据规则自动生成，msg根据变量注释生成，code是否真的有必要存在，感觉code的意义在于统一错误原因，和屏蔽真正的错误原因
     
     /**
      * 未找到数据

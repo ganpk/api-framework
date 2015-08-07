@@ -23,7 +23,7 @@ class Http
     /**
      * 调用者真实ip
      * 调用者要将真实ip放到heder的X-Forwarded-For中
-     * @var array
+     * @var string
      */
     public $ip = '0.0.0.0';
     
@@ -79,7 +79,7 @@ class Http
             $this->request->get = array();
         }
         
-        //处理post的原始包
+        //处理post的原始数据
         $postInput = $this->request->rawContent();
         if ($postInput) {
             $postArr = json_decode($postInput,true);

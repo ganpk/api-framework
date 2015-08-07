@@ -21,25 +21,29 @@ class Gateway
      * 构造方法
      * @param Http $http
      */
-    public function __construct(&$http)
+    public function __construct(\Bootstrap\Http $http)
     {
         //保存http实例
         $this->http = $http;
         
-        //认证请求信息
-        //检查数据包的签名是否正确
-        $signature = empty($this->http->request->post['signature']) ? '' : $this->http->request->post['signature'];
-        $signature = Validator::string()->min(0)->validate($signature) ? $signature : '';
-        if ($signature =='' || !\Bootstrap\Auth::isRightPackDataSignature($this->http->request->get, $this->http->request->post, $signature)) {
-            //认证未通过
-            $this->output(\Config\Code::$AUTH_PACK_DATA_FAIL);
-            return;
-        }
-        //检查用户签名是否正确
-        if (!$this->checkMemberSignature()) {
-            //认证未通过
-            $this->output(\Config\Code::$AUTH_MEMBER_FAIL);
-            return;
+        //检查签名
+        if (RUN_MOD !='produce' && !\Config\Secrety::$isCheckSignatureOnTest) {
+            //非线上模式，且配置了非线上模式不检查签名
+        } else {
+            //检查数据包的签名是否正确
+            $signature = empty($this->http->request->post['signature']) ? '' : $this->http->request->post['signature'];
+            $signature = Validator::string()->min(0)->validate($signature) ? $signature : '';
+            if ($signature =='' || !\Bootstrap\Auth::isRightPackDataSignature($this->http->request->get, $this->http->request->post, $signature)) {
+                //认证未通过
+                $this->output(\Config\Code::$AUTH_PACK_DATA_FAIL);
+                return;
+            }
+            //检查用户签名是否正确
+            if (!$this->checkMemberSignature()) {
+                //认证未通过
+                $this->output(\Config\Code::$AUTH_MEMBER_FAIL);
+                return;
+            }  
         }
         
         //分发任务
@@ -60,11 +64,11 @@ class Gateway
         $extData  = empty($extData)  ? new \stdClass() : $extData;
         
         //检查参数是否合法
-        if (Validator::int()->notEmpty()->validate($codeData['code'])) {
+        if (!Validator::int()->notEmpty()->validate($codeData['code'])) {
             //code参数不合法，写入日志
             $codeData = \Config\Code::$CATCH_EXCEPTION;
         }
-        $codeData['msg'] = (empty($codeData['msg']) || is_string($codeData['msg'])) ? '' : $codeData['msg'];
+        $codeData['msg'] = (empty($codeData['msg']) || !is_string($codeData['msg'])) ? '' : $codeData['msg'];
 
         //转换数组为对象
         if (is_array($result)) {
@@ -102,11 +106,41 @@ class Gateway
      */
     private function dispatcher()
     {
-        //TODO:分发任务
-        $mod     = $this->http->request->get['mod'];
-        $version = $this->http->request->get['version'];
-        $class   = $this->http->request->get['class'];
-        $method  = $this->http->request->get['method'];
+        //uri格式为/v2/item/products/test
+        //安全过滤uri参数
+        $this->secretyFilterUri();
+        //解析uri
+        $uri = strtolower($this->http->request->server['request_uri']);
+        $uriParse = explode('/', $uri);
+        if (count($uriParse) != 4) {
+            //uri不符合格式
+            return;
+        }
+        //分发给相应处理者进行处理
+        $versionName = $uriParse[0];
+        $modName    = $uriParse[1];
+        $className  = $uriParse[2];
+        $methodName = $uriParse[3];
+        //TODO：分发请求：严格判断参数是否有效
+        $path = ROOT_PATH."/apps/{$versionName}/{$modName}/api/{$className}.php";
+        if (!file_exists($path)) {
+            //类文件不存在
+            return;
+        }
+        define('VERSION', $versionName);
         
+    }
+    
+    /**
+     * 安全过滤uri参数
+     */
+    private function secretyFilterUri() {
+        $uri = $this->http->request->server['request_uri'];
+        if (empty($uri)) {
+            return;
+        }
+        //禁止出现.号，以便带来跨文件乱来漏洞
+        $uri = str_replace('.', '', $uri);
+        $this->http->request->server['request_uri'] = $uri;
     }
 }

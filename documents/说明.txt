@@ -1,2 +1,3 @@
-1.post数据采用 php://input形式
+post数据采用 php://input形式
 
+关闭opcahce

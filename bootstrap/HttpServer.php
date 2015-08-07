@@ -3,8 +3,7 @@ namespace Bootstrap;
 
 /**
  * HttpServer 类
- * @author gxd
- *
+ * TODO:纠结协议：是用HTTP协议还是包头，容我琢磨琢磨
  */
 class HttpServer
 {
@@ -42,6 +41,7 @@ class HttpServer
     
     /**
      * 获取实例化对象
+     * @return \Bootstrap\HttpServer
      */
     public static function instance()
     {
@@ -72,6 +72,9 @@ class HttpServer
         //注册请求数据完整后的回调方法
         $this->serv->on('request' , array($this, 'onRequest'));
         
+        //TODO；1.平滑重启，2.修改代码自动reload
+        $this->serv->on('WorkerStart', array($this, 'onWorkerStart'));
+        
         //启动服务器
         $this->serv->start();
     }
@@ -81,10 +84,24 @@ class HttpServer
      * @param object swoole_http_request
      * @param object swoole_http_response
      */
-    public function onRequest($request, $response)
+    protected function onRequest($request, $response)
     {
         //上下文信息保存到Http类中,并转移给gateway网关层处理响应
         new \Bootstrap\Gateway(new \Bootstrap\Http($request, $response));
+    }
+    
+    /**
+     * 此事件在worker进程/task进程启动时发生。这里创建的对象可以在进程生命周期内使用。
+     * @param swoole_http_server $serv
+     * @param int $worker_id worder进程id
+     */
+    protected function onWorkerStart($serv, $worker_id)
+    {
+        //TODO:是否需要生成重启的shell文件
+        //TODO:还要再调整下顺序，包括增加命名空间等全移到这儿，以免重启不生效
+        //定义环境运行模式
+        echo '-';
+        \Bootstrap\RunMod::init();
     }
     
     

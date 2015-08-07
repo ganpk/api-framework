@@ -17,72 +17,47 @@ class Gateway
      */
     private $http = null;
     
-    public function __construct($http)
+    /**
+     * 构造方法
+     * @param Http $http
+     */
+    public function __construct(&$http)
     {
         //保存http实例
         $this->http = $http;
         
         //认证请求信息
-        $this->authoriseRequest();
-        
-        //分发任务
-        
-        //响应数据
-    }
-    
-    /**
-     * 认证请求信息
-     */
-    private function authoriseRequest(){
         //检查数据包的签名是否正确
-        $this->checkPackSignature();
-        
-        //检查用户签名是否正确
-        $this->checkMemberSignature();
-    }
-    
-    /**
-     * 检查数据包签名是否正确，防止被篡改
-     */
-    private function checkPackSignature()
-    {
-        $checkRes = true;
-        $checkRes = \Bootstrap\Auth::
-    }    
-    
-    /**
-     * 检查用户签名是否正确
-     */
-    private function checkMemberSignature()
-    {
-        $checkRes = true;
-        if (Validator::int()->notEmpty()->min(0)->validate($this->http->request->header['memberId'])) {
-            //如果传有uerId，则检查用户签名是否正确
-            $memberId = $this->http->request->header['memberId'];
-            $signature = $this->http->request->header['memberSignature'];
-            $checkRes = \Bootstrap\Auth::isRightMemberSignature($memberId, $signature);
-        } else {
-            //没有用户，不存在用户也就不存在用户签名的说法
-            $checkRes = true;
+        $signature = empty($this->http->request->post['signature']) ? '' : $this->http->request->post['signature'];
+        $signature = Validator::string()->min(0)->validate($signature) ? $signature : '';
+        if ($signature =='' || !\Bootstrap\Auth::isRightPackDataSignature($this->http->request->get, $this->http->request->post, $signature)) {
+            //认证未通过
+            $this->output(\Config\Code::$AUTH_PACK_DATA_FAIL);
+            return;
         }
-        if (!$checkRes) {
+        //检查用户签名是否正确
+        if (!$this->checkMemberSignature()) {
             //认证未通过
             $this->output(\Config\Code::$AUTH_MEMBER_FAIL);
+            return;
         }
+        
+        //分发任务
+        $this->dispatcher();
     }
     
     /**
      * 统一对外输出方法
-     * @param \Config\Code  $codeData 定义的Code项
+     * @param array  $codeData 定义的Code项
      * @param object $result 为了统一结构且方便调用者，result必须是对象，不能直接用数组（包含关系数据），
      * @param object $extData  扩展数据，必须是对象
      */
     public function output($codeData = array(), $result = array(), $extData = array())
     {
         //准备参数
-        $codeData = empty($codeData) ? array() : (object)$codeData;
-        $result   = empty($result) ? new stdClass() : $result;
-        $extData  = empty($extData) ? new stdClass() : $extData;
+        $codeData = empty($codeData) ? array() : $codeData;
+        $result   = empty($result)   ? new \stdClass() : $result;
+        $extData  = empty($extData)  ? new \stdClass() : $extData;
         
         //检查参数是否合法
         if (Validator::int()->notEmpty()->validate($codeData['code'])) {
@@ -108,7 +83,7 @@ class Gateway
             'result'  => $result
         ];
         
-        $this->response(json_ecode($resTplData));
+        $this->response(json_encode($resTplData));
     }
     
     /**
@@ -120,5 +95,18 @@ class Gateway
     {
         $this->http->response->status = $statusCode;
         $this->http->response->end($content);
+    }
+    
+    /**
+     * 分发任务
+     */
+    private function dispatcher()
+    {
+        //TODO:分发任务
+        $mod     = $this->http->request->get['mod'];
+        $version = $this->http->request->get['version'];
+        $class   = $this->http->request->get['class'];
+        $method  = $this->http->request->get['method'];
+        
     }
 }

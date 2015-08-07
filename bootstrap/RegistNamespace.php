@@ -9,7 +9,7 @@ class RegistNameSpace
 {
     /**
      * 存放当前实例化类
-     * @var Object HandlerNamespace
+     * @var RegistNameSpace
      */
     private static $instance = null;
     
@@ -21,7 +21,7 @@ class RegistNameSpace
     
     /**
      * 自动加载类的loader对象
-     * @var Object ClassLoader
+     * @var ClassLoader
      */
     private $classLoader = null;
     
@@ -122,7 +122,7 @@ class RegistNameSpace
                 closedir($dh);
                 self::$isHandled = true;
             } else {
-                throw new Ganpk\RegistNameSpace\Exception\RegisterNameSpaceException('不能找开目录'.$dir);
+                throw new \Exceptions\RegistNamespaceException('不能找开目录'.$dir);
             }
         }
     }

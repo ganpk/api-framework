@@ -2,11 +2,11 @@
 namespace Bootstrap;
 
 /**
- * TCP服务类
+ * HttpServer 类
  * @author gxd
  *
  */
-class Server
+class HttpServer
 {
     /**
      * 存放当前实例化类
@@ -52,7 +52,7 @@ class Server
     }
     
     /**
-     * 启动网关服务
+     * 启动TCP网络服务
      */
     public function start() 
     {
@@ -83,7 +83,7 @@ class Server
      */
     public function onRequest($request, $response)
     {
-        //上下文信息保存到HttpManager类中,并转移给gateway网关层处理响应
+        //上下文信息保存到Http类中,并转移给gateway网关层处理响应
         new \Bootstrap\Gateway(new \Bootstrap\Http($request, $response));
     }
     

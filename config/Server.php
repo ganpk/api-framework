@@ -2,7 +2,7 @@
 namespace Config;
 
 /**
- * 服务端口层配置文件
+ * TCP服务层配置文件
  *
  */
 class Server

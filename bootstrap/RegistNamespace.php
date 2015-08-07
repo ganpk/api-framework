@@ -99,6 +99,8 @@ class RegistNameSpace
         } else {
             //扫描目录下的目录并增加到class map中
             $this->scanDirAddClassMap($this->rootPath);
+            //注册完后销毁对象，防止浪费内存
+            self::desInstance();
         }
     }
     

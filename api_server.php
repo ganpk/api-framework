@@ -1,5 +1,4 @@
 <?php
-use Bootstrap;
 /**
  * 服务端入口文件
  * 
@@ -16,7 +15,10 @@ use Bootstrap;
  *   - 响应数据
  *   - 断开连接
  */
- 
+
+error_reporting(E_ALL);
+ini_set('display_errors','On');
+
 //定义根目录路径
 define('ROOT_PATH', __DIR__);
 
@@ -27,6 +29,6 @@ $loader = require './vendor/autoload.php';
 require './bootstrap/RegistNamespace.php';
 Bootstrap\RegistNameSpace::instance(ROOT_PATH,['vendor','documents'],$loader)->register();
 
-//启动网关层，对外提交服务
-Bootstrap\Gateway::start();
+//启动服务，对外提供服务
+Bootstrap\Server::instance()->start();
 

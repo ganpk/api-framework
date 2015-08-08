@@ -42,7 +42,7 @@ class RegistNameSpace
      * @param string $rootPath
      * @param string $classLoader
      */
-    private final function __construct($rootPath = '', $ignore = array(), $classLoader = null)
+    final protected function __construct($rootPath = '', $ignore = array(), $classLoader = null)
     {
         $this->rootPath = $rootPath;
         $this->ignore = $ignore;
@@ -52,9 +52,8 @@ class RegistNameSpace
     /**
      * 单例模式禁止外部克隆
      */
-    private final function __clone()
+    final protected  function __clone()
     {
-    
     }
     
     /**

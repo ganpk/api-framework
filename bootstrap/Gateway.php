@@ -127,6 +127,10 @@ class Gateway
             //类文件不存在
             return;
         }
+        //请求的post参数
+        $params = $this->request->post;
+        //TODO:没有在规则里面的参数全部踢出去，非正式环境开启即可，主要为了规避没按难规则来，私自接外部参数
+        //TODO:调用相应api，响应数据            
         define('VERSION', $versionName);
         
     }

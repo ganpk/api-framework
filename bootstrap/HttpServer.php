@@ -3,7 +3,6 @@ namespace Bootstrap;
 
 /**
  * HttpServer 类
- * TODO:纠结协议：是用HTTP协议还是包头，容我琢磨琢磨
  */
 class HttpServer
 {

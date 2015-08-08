@@ -1,0 +1,4 @@
+1.当前是否真的有分模块的必要？，如分成item和sns，个人感觉现在还没到时间，增加维护成本，时机到了再移是否更好？
+
+2.如果1成立，则api和modules里的类建议加上大的模块分组作为前缀，便于以后拆分，目前有sns,cart,user,item ，如用户的地址类：UserAddresses，圈子评论类snsComments
+

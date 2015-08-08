@@ -16,7 +16,7 @@ class RunMod
         foreach (\Config\Env::$hostnameRule as $k=>$v) {
             if (preg_match($k, $hostname)) {
                 //找到了按规则
-                define('RUN_MOD', $value);
+                define('RUN_MOD', $v);
                 break;
             }
         }

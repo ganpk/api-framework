@@ -1,5 +1,5 @@
 <?php
-namespace Apps\V1\Config;
+namespace Apps\V2\Config;
 
 /**
  * 某版本下的全局配置文件

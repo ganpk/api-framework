@@ -64,7 +64,7 @@ class Gateway
         $extData  = empty($extData)  ? new \stdClass() : $extData;
         
         //检查参数是否合法
-        if (!Validator::int()->notEmpty()->validate($codeData['code'])) {
+        if (!Validator::int()->validate($codeData['code'])) {
             //code参数不合法，写入日志
             $codeData = \Config\Code::$CATCH_EXCEPTION;
         }
@@ -111,28 +111,21 @@ class Gateway
         $this->secretyFilterUri();
         //解析uri
         $uri = strtolower($this->http->request->server['request_uri']);
-        $uriParse = explode('/', $uri);
-        if (count($uriParse) != 4) {
+        $uriParse = explode('/', trim($uri,'/'));
+        if (count($uriParse) != 3) {
             //uri不符合格式
             return;
         }
         //分发给相应处理者进行处理
         $versionName = $uriParse[0];
-        $modName    = $uriParse[1];
-        $className  = $uriParse[2];
-        $methodName = $uriParse[3];
-        //TODO：分发请求：严格判断参数是否有效
-        $path = ROOT_PATH."/apps/{$versionName}/{$modName}/api/{$className}.php";
-        if (!file_exists($path)) {
-            //类文件不存在
-            return;
-        }
+        $className   = ucfirst($uriParse[1]);
+        $methodName  = $uriParse[2];
         //请求的post参数
-        $params = $this->request->post;
+        $params = $this->http->request->post;
         //TODO:没有在规则里面的参数全部踢出去，非正式环境开启即可，主要为了规避没按难规则来，私自接外部参数
-        //TODO:调用相应api，响应数据            
-        define('VERSION', $versionName);
-        
+        //调用相应api，响应数据
+        $result = \Lib\AppFactory::api($className, $versionName)->{$methodName}($params);
+        $this->output(\Config\Code::$SUCCESS ,$result);
     }
     
     /**

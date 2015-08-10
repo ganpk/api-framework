@@ -83,7 +83,7 @@ class HttpServer
      * @param object swoole_http_request
      * @param object swoole_http_response
      */
-    protected function onRequest($request, $response)
+    public function onRequest($request, $response)
     {
         //上下文信息保存到Http类中,并转移给gateway网关层处理响应
         new \Bootstrap\Gateway(new \Bootstrap\Http($request, $response));
@@ -94,12 +94,11 @@ class HttpServer
      * @param swoole_http_server $serv
      * @param int $worker_id worder进程id
      */
-    protected function onWorkerStart($serv, $worker_id)
+    public function onWorkerStart($serv, $worker_id)
     {
         //TODO:是否需要生成重启的shell文件
         //TODO:还要再调整下顺序，包括增加命名空间等全移到这儿，以免重启不生效
         //定义环境运行模式
-        echo '-';
         \Bootstrap\RunMod::init();
     }
     

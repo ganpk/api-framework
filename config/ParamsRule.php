@@ -1,26 +1,23 @@
 <?php
-namespace v1\lib;
+namespace Config;
 
 /**
- * 参数规则
- * TODO:参数规则参评，再想下怎么实现好
+ * 全局参数规则
+ * 为了统一参数KEY的意义和统一验证
+ * 程序会通过反射取它的注释作为返回的的msg值
+ * 注意：这里必须严格按示例方式进行注释
  */
 class ParamsRule
 {
     /**
-     * 全局规则
+     * 商品ID
+     * @var array
      */
-    public static $rules = [
-         /**
-          * 商品id
-          */
-        'productId' => ['type'=>'int','min'=>1],
-        
-        /**
-         * 邮箱
-         */
-        'email' => ['type'=>'email'],
-        
-        
-    ];
+    public $productId = array('type' => 'int', 'min'=>1);
+
+    /**
+     * 用户ID
+     * @var array
+     */
+    public $memberId  = array('type'=>'int', 'min'=>0);
 }

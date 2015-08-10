@@ -1,5 +1,5 @@
 <?php
-namespace Apps\V1\Lib;
+namespace Libs;
 
 /**
  * 模块公共辅助类

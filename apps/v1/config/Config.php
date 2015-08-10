@@ -10,5 +10,5 @@ class Config
      * 当前版本继承到某版本，没有则为空
      * @var string
      */
-    public static $extends = null;    
+    public $extends = null;    
 }

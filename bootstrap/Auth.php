@@ -29,7 +29,7 @@ class Auth
      */
     public static function isRightMemberSignature($memberId = 0, $signature = '')
     {
-        if ($this->getMemberSignature($memberId) == $signature) {
+        if (self::getMemberSignature($memberId) == $signature) {
             return true;
         } else {
             return false;

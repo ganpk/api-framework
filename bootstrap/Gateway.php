@@ -39,7 +39,7 @@ class Gateway
                 return;
             }
             //检查用户签名是否正确
-            if (!$this->checkMemberSignature()) {
+            if (!\Bootstrap\Auth::isRightMemberSignature($this->http->memberId, $this->http->memberSignature)) {
                 //认证未通过
                 $this->output(\Config\Code::$AUTH_MEMBER_FAIL);
                 return;
@@ -114,6 +114,7 @@ class Gateway
         $uriParse = explode('/', trim($uri,'/'));
         if (count($uriParse) != 3) {
             //uri不符合格式
+            //TODO:响应错误信息
             return;
         }
         //分发给相应处理者进行处理
@@ -123,8 +124,12 @@ class Gateway
         //请求的post参数
         $params = $this->http->request->post;
         //TODO:没有在规则里面的参数全部踢出去，非正式环境开启即可，主要为了规避没按难规则来，私自接外部参数
+        $class = new \ReflectionClass('\Config\ParamsRule');
+        print_r($class->getDocComment());
+        print_r($class->getProperties()[0]->getDocComment());
+
         //调用相应api，响应数据
-        $result = \Lib\AppFactory::api($className, $versionName)->{$methodName}($params);
+        $result = \Libs\AppFactory::api($className, $versionName)->{$methodName}($params);
         $this->output(\Config\Code::$SUCCESS ,$result);
     }
     

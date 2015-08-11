@@ -7,6 +7,12 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
+    'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
+    'Stringy\\' => array($vendorDir . '/danielstjules/stringy/src'),
     'Respect\\Validation\\' => array($vendorDir . '/respect/validation/library'),
     'League\\Url\\' => array($vendorDir . '/league/url/src'),
+    'Illuminate\\Support\\' => array($vendorDir . '/illuminate/support'),
+    'Illuminate\\Database\\' => array($vendorDir . '/illuminate/database'),
+    'Illuminate\\Contracts\\' => array($vendorDir . '/illuminate/contracts'),
+    'Illuminate\\Container\\' => array($vendorDir . '/illuminate/container'),
 );

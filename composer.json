@@ -1,7 +1,8 @@
 {
     "require": {
         "respect/validation": "0.9.3",
-        "league/url": "3.3.5"
+        "league/url": "3.3.5",
+        "illuminate/database": "5.0.33"
     },
     "repositories": [
         {"type": "composer", "url": "http://packagist.phpcomposer.com"},

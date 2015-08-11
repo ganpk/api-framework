@@ -1,7 +1,7 @@
 <?php
-namespace Apps\v1\apis;
+namespace Apps\V1\apis;
 
-class Demo
+class Demo extends \Apps\V1\apis\BaseApi
 {
     public function test()
     {

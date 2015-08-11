@@ -164,7 +164,7 @@ class Gateway
                     //在规则中，则验证是否符合规则
                     if (!$this->validatorParam($v,\Config\ParamsRule::$rules[$k])) {
                         $codeArr = \Config\Code::$ELLEGAL_PARAMS;
-                        $codeArr['msg'] = sprintf($codeArr['msg'],\Config\ParamsRule::$rules[$k]['desc'].'错误');
+                        $codeArr['msg'] = sprintf($codeArr['msg'], \Config\ParamsRule::$rules[$k]['desc'].'错误');
                         $this->output($codeArr);
                         return false;
                     }

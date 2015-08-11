@@ -27,14 +27,14 @@ class HttpServer
     /**
      * 单例模式禁止外部实例化
      */
-    private final function __construct()
+    final private function __construct()
     {
     }
 
     /**
      * 单例模式禁止外部克隆
      */
-    private final function __clone()
+    final private function __clone()
     {
     }
     

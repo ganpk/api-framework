@@ -23,9 +23,10 @@ class Gateway
      */
     public function __construct(\Bootstrap\Http $http)
     {
+
         //保存http实例
         $this->http = $http;
-        
+
         //检查签名
         if (RUN_MOD !='produce' && !\Config\Secrety::$isCheckSignatureOnTest) {
             //非线上模式，且配置了非线上模式不检查签名
@@ -53,8 +54,8 @@ class Gateway
     /**
      * 统一对外输出方法
      * @param array  $codeData 定义的Code项
-     * @param object $result 为了统一结构且方便调用者，result必须是对象，不能直接用数组（包含关系数据），
-     * @param object $extData  扩展数据，必须是对象
+     * @param array $result 为了统一结构且方便调用者，result必须是对象，不能直接用数组（包含关系数据），
+     * @param array $extData  扩展数据，必须是对象
      */
     public function output($codeData = array(), $result = array(), $extData = array())
     {
@@ -93,7 +94,7 @@ class Gateway
     /**
      * 响应
      * @param string $content 响应内容
-     * @param number $statusCode 响应状态码
+     * @param int $statusCode 响应状态码
      */
     private function response($content = '', $statusCode = 200)
     {
@@ -107,8 +108,10 @@ class Gateway
     private function dispatcher()
     {
         //uri格式为/v2/item/products/test
+
         //安全过滤uri参数
         $this->secretyFilterUri();
+
         //解析uri
         $uri = strtolower($this->http->request->server['request_uri']);
         $uriParse = explode('/', trim($uri,'/'));
@@ -117,18 +120,20 @@ class Gateway
             //TODO:响应错误信息
             return;
         }
+
         //分发给相应处理者进行处理
         $versionName = $uriParse[0];
         $className   = ucfirst($uriParse[1]);
         $methodName  = $uriParse[2];
-        //请求的post参数
-        $params = $this->http->request->post;
-        //TODO:没有在规则里面的参数全部踢出去，非正式环境开启即可，主要为了规避没按难规则来，私自接外部参数
-        $class = new \ReflectionClass('\Config\ParamsRule');
-        print_r($class->getDocComment());
-        print_r($class->getProperties()[0]->getDocComment());
+
+        //检查并过滤参数
+        if (!$this->checkParams()) {
+            //参数不合法
+            return;
+        }
 
         //调用相应api，响应数据
+        $params = $this->http->request->post;
         $result = \Libs\AppFactory::api($className, $versionName)->{$methodName}($params);
         $this->output(\Config\Code::$SUCCESS ,$result);
     }
@@ -141,8 +146,78 @@ class Gateway
         if (empty($uri)) {
             return;
         }
-        //禁止出现.号，以便带来跨文件乱来漏洞
+        //禁止出现.号，以防跨文件执行的安全问题
         $uri = str_replace('.', '', $uri);
         $this->http->request->server['request_uri'] = $uri;
     }
+    
+    /**
+     * 检查参数
+     */
+    private function checkParams()
+    {
+        $params = $this->http->request->post;
+        if (count($params) > 0) {
+            foreach ($params as $k => $v) {
+                if (empty(\Config\ParamsRule::$rules[$k])) {
+                    //规则中没有定义，则踢出参数中
+                    unset($this->http->request->post[$k]);
+                    continue;
+                } else  {
+                    //在规则中，则验证是否符合规则
+                    if (!$this->validatorParam($v,\Config\ParamsRule::$rules[$k])) {
+                        $codeArr = \Config\Code::$ELLEGAL_PARAMS;
+                        $codeArr['msg'] = sprintf($codeArr['msg'],\Config\ParamsRule::$rules[$k]['desc'].'错误');
+                        $this->output($codeArr);
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * 根据规则验证参数是否符合规则
+     * @param mixed $value 验证参数值
+     * @param array $rule 规则
+     * @return boolean
+     * TODO:此方法有点low,后面再优化吧，
+     */
+    private function validatorParam($value,$rule)
+    {
+        foreach ($rule as $k => $v) {
+            switch ($k) {
+                case 'type':
+                    if (!Validator::$v()->validate($value)) {
+                        return false;
+                    }
+                    break;
+                case 'min':
+                    if ($rule['type'] == 'int') {
+                        if ($value < $v) {
+                            return false;
+                        }
+                    } elseif ($rule['type'] == 'string') {
+                        if (strlen($value) < $v) {
+                            return false;
+                        }
+                    }
+                    break;
+                case 'max':
+                    if ($rule['type'] == 'int') {
+                        if ($value > $v) {
+                            return false;
+                        }
+                    } elseif ($rule['type'] == 'string') {
+                        if (strlen($value) > $v) {
+                            return false;
+                        }
+                    }
+                    break;
+            }
+        }
+        return true;
+    }
+    
 }

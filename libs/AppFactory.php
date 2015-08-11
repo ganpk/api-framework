@@ -58,6 +58,7 @@ class AppFactory
      */
     public static function config($className)
     {
+        //TODO:只加载当前环境的配置文件
         return self::getInstance('config', $className);
     }
     

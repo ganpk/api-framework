@@ -3,7 +3,7 @@ namespace Apps\V2\Apis;
 
 class Products
 {
-    public function test(){
-        return array('test'=>'hello world v2');
+    public function test($param){
+        return array('response'=>'v2','params'=>$param);
     }
 }

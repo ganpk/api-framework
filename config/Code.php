@@ -38,7 +38,13 @@ class Code
      * @var array
      */
     public static $AUTH_PACK_DATA_FAIL = ['code'  => '-4','msg' => 'authorise the pack data fail'];
-    
+
+    /**
+     * 未找到数据
+     * @var array
+     */
+    public static $ELLEGAL_PARAMS = ['code'  => '-5','msg' => '参数不正确：%s'];
+
     //TODO:code能否根据规则自动生成，msg根据变量注释生成，code是否真的有必要存在，感觉code的意义在于统一错误原因，和屏蔽真正的错误原因
     
     /**

@@ -89,6 +89,6 @@ class Server
          | discard_timeout_request配置默认为true，表示如果worker进程收到了已关闭连接的数据请求，将自动丢弃。
          | discard_timeout_request如果设置为false，表示无论连接是否关闭Worker进程都会处理数据请求。
          */
-        'discard_timeout_request' => true
-    );    
+        'discard_timeout_request' => true,
+    );
 }

@@ -68,7 +68,7 @@ class Http
      * @param object $request
      * @param object $response
      */
-    public function __construct(&$request, &$response)
+    public function __construct($request, $response)
     {
         //保存数值到http类属性中
         $this->request  = $request;
@@ -78,15 +78,21 @@ class Http
             //get不存在则赋上一个空数组，以防后面使用报错
             $this->request->get = array();
         }
-        
-        //处理post的原始数据
-        $postInput = $this->request->rawContent();
-        if ($postInput) {
-            $postArr = json_decode($postInput,true);
-            $this->request->post = empty($postArr) ? array() : $postArr;
+
+        if (\Config\Config::$isOpenOriginalPostInput) {
+            //开启了post原始请求
+            $postInput = $this->request->rawContent();
+            if (!empty($postInput)) {
+                $postArr = json_decode($postInput,true);
+                $this->request->post = empty($postArr) ? array() : $postArr;
+            } else {
+                $this->request->post = array();
+            }
         } else {
-            $this->request->post = array();
+            //没有开启post原始请求，默认已解析好了
+            $this->request->post = empty($this->request->post) ? array() : $this->request->post;
         }
+
         
         //获取header固定项到http属性中
         $header = $this->request->header;

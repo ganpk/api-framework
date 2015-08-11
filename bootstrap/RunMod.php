@@ -13,7 +13,7 @@ class RunMod
     public static function init()
     {
         $hostname = gethostname();
-        foreach (\Config\Env::$hostnameRule as $k=>$v) {
+        foreach (\Config\Config::$hostnameRule as $k=>$v) {
             if (preg_match($k, $hostname)) {
                 //找到了按规则
                 define('RUN_MOD', $v);

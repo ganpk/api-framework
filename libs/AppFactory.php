@@ -21,6 +21,9 @@ class AppFactory
      */
     public static function api($className,$version = null)
     {
+        if ($version == null) {
+            $version = self::getVersion();
+        }
         return self::getInstance('apis', $className, $version);
     }
 
@@ -31,7 +34,8 @@ class AppFactory
      */
     public static function module($className)
     {
-        return self::getInstance('modules', $className);
+        $version = self::getVersion();
+        return self::getInstance('modules', $className, $version);
     }
 
     /**
@@ -41,7 +45,8 @@ class AppFactory
      */
     public static function model($className)
     {
-        return self::getInstance('models', $className);
+        $version = self::getVersion();
+        return self::getInstance('models', $className, $version);
     }
 
     /**
@@ -51,6 +56,9 @@ class AppFactory
      */
     public static function config($className, $version = null)
     {
+        if ($version == null) {
+            $version = self::getVersion();
+        }
         return self::getInstance('config', $className, $version);
     }
     
@@ -64,24 +72,28 @@ class AppFactory
      */
     private static function getInstance($appName, $className, $version)
     {
-        if ($version == '') {
-            //自动获取
-            $version = self::getVersion();
+        if ($version == null) {
+            throw new \Exception('未发现版本号');
         }
-
         //判断类文件是否存在
         $classNameLower = strtolower($className);
 
         //判断是否是获取的配置，如果应该加载当前环境配置文件
-        $versionUpper = strtoupper($version);
         //类空间名称
         $classNameSpace = '';
         if ($appName == 'config') {
-            //是配置文件
+            //获取配置
+            //优先找当前环境下的配置，没有则找全局下的配置
             $env = RUN_MOD;
             $envUpper = ucfirst($env);
             $classFilePath = ROOT_PATH."/apps/{$version}/{$appName}/{$env}/{$classNameLower}.php";
             $classNameSpace = "\\Apps\\{$version}\\{$appName}\\{$envUpper}\\{$className}";
+            if (!file_exists($classFilePath)) {
+                //定制环境中有配置文件，则拿全局的
+                $classFilePath = ROOT_PATH."/apps/{$version}/{$appName}/{$classNameLower}.php";
+                $classNameSpace = "\\Apps\\{$version}\\{$appName}\\{$className}";
+            }
+            echo $classNameSpace.PHP_EOL;
         } else {
             $classFilePath = ROOT_PATH."/apps/{$version}/{$appName}/{$classNameLower}.php";
             $classNameSpace = "\\Apps\\{$version}\\{$appName}\\{$className}";
@@ -89,18 +101,23 @@ class AppFactory
 
         if (!file_exists($classFilePath)) {
             //类文件不存在，则判断是否还要向上版本找
-            $extendsVersion  = self::config('Config',$version)->extends;
-            if (Validator::string()->notEmpty($extendsVersion)) {
+            $extendsVersion  = self::config('Version',$version)->extends;
+            if ($extendsVersion != null) {
                 //配置了继承关系，递归向上找
                 return self::getInstance($appName, $className, $extendsVersion);
             } else {
-                //找不到则会抛出异常
+                //找不到则抛出异常
                 throw new \Exception("class {$className} not found");
             }
         }
 
         //找到了类，则实例化返回
-        return $classNameSpace::instance();
+        if ($appName == 'config') {
+            //config不是单例模式，new后返回
+            return new $classNameSpace();
+        } else {
+            return $classNameSpace::instance();
+        }
     }
     
     /**

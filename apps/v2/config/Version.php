@@ -1,10 +1,12 @@
 <?php
-namespace Apps\V2\Config\Dev;
+namespace Apps\V2\Config;
 
 /**
- * 某版本下的全局配置文件
+ * 版本配置文件
+ * Class Version
+ * @package Apps\V1\Config
  */
-class Config
+class Version
 {
     /**
      * 当前版本继承到某版本，没有则为空

@@ -1,5 +1,5 @@
 <?php
-namespace Apps\V1\apis;
+namespace Apps\V1\Apis;
 
 /**
  * API 基类
@@ -31,10 +31,11 @@ class BaseApi
      * 获取BaseApi实例
      * @return BaseApi
      */
-    final public function instance()
+    final public static function instance()
     {
         if (self::$instance === null) {
-            self::$instance = new self();
+           $class = get_called_class();
+            self::$instance = new $class();
         }
         return self::$instance;
     }

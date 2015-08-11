@@ -1,10 +1,16 @@
 <?php
-namespace Apps\V1\apis;
+namespace Apps\V1\Apis;
 
-class Demo extends \Apps\V1\apis\BaseApi
+/**
+ * Ê¾ÀıAPI
+ * Class Demo
+ * @package Apps\V1\Apis
+ */
+class Demo extends \Apps\V1\Apis\BaseApi
 {
     public function test()
     {
-        return array('demo'=>'test');
+        $result = \Libs\AppFactory::module('Demo')->test();
+        return array('demo'=>'test',array('module'=>$result));
     }
 }

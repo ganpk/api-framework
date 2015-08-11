@@ -2,38 +2,39 @@
 namespace Apps\V1\Models;
 
 /**
- * model »ùÀà
+ * model åŸºç±»
  * Class baseModel
  * @package Apps\V1\Models
  */
-class baseModel
+class BaseModel
 {
-    /** µ±Ç°ÀàµÄÊµÀı»¯¶ÔÏó
+    /** å½“å‰ç±»çš„å®ä¾‹åŒ–å¯¹è±¡
      * @var BaseApi
      */
     protected static $instance = null;
     /**
-     * µ¥ÀıÄ£Ê½½ûÖ¹Íâ²¿ÊµÀı»¯
+     * å•ä¾‹æ¨¡å¼ç¦æ­¢å¤–éƒ¨å®ä¾‹åŒ–
      */
     final protected function __construct()
     {
     }
 
     /**
-     * µ¥ÀıÄ£Ê½½ûÖ¹Íâ²¿¿ËÂ¡
+     * å•ä¾‹æ¨¡å¼ç¦æ­¢å¤–éƒ¨å…‹éš†
      */
     final protected function __clone()
     {
     }
 
     /**
-     * »ñÈ¡BaseApiÊµÀı
+     * è·å–BaseApiå®ä¾‹
      * @return BaseApi
      */
-    final public function instance()
+    final public static function instance()
     {
         if (self::$instance === null) {
-            self::$instance = new self();
+            $class = get_called_class();
+            self::$instance = new $class();
         }
         return self::$instance;
     }

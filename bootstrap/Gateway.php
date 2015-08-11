@@ -23,7 +23,6 @@ class Gateway
      */
     public function __construct(\Bootstrap\Http $http)
     {
-
         //保存http实例
         $this->http = $http;
         //检查签名
@@ -31,9 +30,9 @@ class Gateway
             //非线上模式，且配置了非线上模式不检查签名
         } else {
             //检查数据包的签名是否正确
-            $signature = empty($this->http->request->post['signature']) ? '' : $this->http->request->post['signature'];
-            $signature = Validator::string()->min(0)->validate($signature) ? $signature : '';
-            if ($signature =='' || !\Bootstrap\Auth::isRightPackDataSignature($this->http->request->server['request_uri'], $this->http->request->post, $signature)) {
+            $signature = empty($this->http->dataSignature) ? '' : $this->http->dataSignature;
+            $signature = Validator::string()->length(1)->validate($signature) ? $signature : '';
+            if ($signature == '' || !\Bootstrap\Auth::isRightPackDataSignature($this->http->request->server['request_uri'], $this->http->request->post, $signature)) {
                 //认证未通过
                 $this->output(\Config\Code::$AUTH_PACK_DATA_FAIL);
                 return;
@@ -133,7 +132,7 @@ class Gateway
 
         //调用相应api，响应数据
         $result = \Libs\AppFactory::api($className, $versionName)->{$methodName}($this->http->request->post);
-        $this->output(\Config\Code::$SUCCESS ,$result);
+        $this->output(\Config\Code::$SUCCESS, $result);
     }
     
     /**

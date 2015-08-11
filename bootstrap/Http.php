@@ -48,6 +48,13 @@ class Http
      * @var string
      */
     public $memberSignature = '';
+
+    /**
+     * 请求的数据包签名
+     * 每个请求都需要对请求数据签名，以防篡改
+     * @var string
+     */
+    public $dataSignature = '';
     
     /**
      * 客户端系统
@@ -93,28 +100,31 @@ class Http
             $this->request->post = empty($this->request->post) ? array() : $this->request->post;
         }
 
-        
         //获取header固定项到http属性中
         $header = $this->request->header;
-        if (!empty($header['memberId']) && Validator::int()->min(0)->validate($header['memberId'])) {
+        if (!empty($header['member-id']) && Validator::int()->min(0)->validate($header['member-id'])) {
             //memberId有效
-            $this->memberId = $header['memberId'];
+            $this->memberId = intval($header['memberId']);
         }
-        if (!empty($header['memberSignature']) && Validator::string()->validate($header['memberSignature'])) {
+        if (!empty($header['member-signature']) && Validator::string()->validate($header['member-signature'])) {
             //用户签名有效
-            $this->memberSignature = $header['memberSignature'];
+            $this->memberSignature = $header['member-signature'];
         }
-        if (!empty($header['clientIdCart']) && Validator::string()->validate($header['clientIdCart'])) {
+        if (!empty($header['data-signature']) && Validator::string()->validate($header['data-signature'])) {
+            //数据包签名有效
+            $this->dataSignature = $header['data-signature'];
+        }
+        if (!empty($header['client-id-card']) && Validator::string()->validate($header['client-id-card'])) {
            //客户端唯一身份标识有效
-           $this->clientIdCart = $header['clientIdCart'];
+           $this->clientIdCart = $header['client-id-card'];
         }
-        if (!empty($header['clientSystem']) && Validator::string()->validate($header['clientSystem'])) {
+        if (!empty($header['client-system']) && Validator::string()->validate($header['client-system'])) {
             //客户端系统标识有效
-            $this->clientSystem = $header['clientSystem'];
+            $this->clientSystem = $header['client-system'];
         }
-        if (!empty($header['clientPlatform']) && Validator::string()->validate($header['clientPlatform'])) {
+        if (!empty($header['client-platform']) && Validator::string()->validate($header['client-platform'])) {
             //客户端平台标识有效
-            $this->clientPlatform = $header['clientSystem'];
+            $this->clientPlatform = $header['client-platform'];
         }
     }
 }

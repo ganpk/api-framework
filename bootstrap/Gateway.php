@@ -26,7 +26,6 @@ class Gateway
 
         //保存http实例
         $this->http = $http;
-
         //检查签名
         if (RUN_MOD !='produce' && !\Config\Secrety::$isCheckSignatureOnTest) {
             //非线上模式，且配置了非线上模式不检查签名
@@ -34,7 +33,7 @@ class Gateway
             //检查数据包的签名是否正确
             $signature = empty($this->http->request->post['signature']) ? '' : $this->http->request->post['signature'];
             $signature = Validator::string()->min(0)->validate($signature) ? $signature : '';
-            if ($signature =='' || !\Bootstrap\Auth::isRightPackDataSignature($this->http->request->get, $this->http->request->post, $signature)) {
+            if ($signature =='' || !\Bootstrap\Auth::isRightPackDataSignature($this->http->request->server['request_uri'], $this->http->request->post, $signature)) {
                 //认证未通过
                 $this->output(\Config\Code::$AUTH_PACK_DATA_FAIL);
                 return;
@@ -107,7 +106,7 @@ class Gateway
      */
     private function dispatcher()
     {
-        //uri格式为/v2/item/products/test
+        //uri格式为/v2/products/test
 
         //安全过滤uri参数
         $this->secretyFilterUri();
@@ -117,7 +116,7 @@ class Gateway
         $uriParse = explode('/', trim($uri,'/'));
         if (count($uriParse) != 3) {
             //uri不符合格式
-            //TODO:响应错误信息
+            $this->output(\Config\Code::$ELLEGAL_API_URL);
             return;
         }
 
@@ -128,13 +127,12 @@ class Gateway
 
         //检查并过滤参数
         if (!$this->checkParams()) {
-            //参数不合法
+            //参数不合法,checkParams方法已经响应给了客户端调用信息
             return;
         }
 
         //调用相应api，响应数据
-        $params = $this->http->request->post;
-        $result = \Libs\AppFactory::api($className, $versionName)->{$methodName}($params);
+        $result = \Libs\AppFactory::api($className, $versionName)->{$methodName}($this->http->request->post);
         $this->output(\Config\Code::$SUCCESS ,$result);
     }
     
@@ -182,7 +180,7 @@ class Gateway
      * @param mixed $value 验证参数值
      * @param array $rule 规则
      * @return boolean
-     * TODO:此方法有点low,后面再优化吧，
+     * TODO:此方法有点low,后面再优化吧
      */
     private function validatorParam($value,$rule)
     {

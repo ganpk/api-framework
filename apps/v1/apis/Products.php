@@ -1,9 +1,9 @@
 <?php
-namespace Apps\V1\Api;
+namespace Apps\V1\Apis;
 
 class Products
 {
     public function test(){
-        echo '--test--';
+        return array('test'=>'hello world');
     }
 }

@@ -56,10 +56,10 @@ class AppFactory
      * @param $className config类名
      * @return object
      */
-    public static function config($className)
+    public static function config($className, $version = null)
     {
         //TODO:只加载当前环境的配置文件
-        return self::getInstance('config', $className);
+        return self::getInstance('config', $className, $version);
     }
     
     /**
@@ -84,7 +84,7 @@ class AppFactory
         }
 
         //获取实例
-        $instance = self::createInstance('apis', $className, $version);
+        $instance = self::createInstance($layerName, $className, $version);
 
         //最后再判断下是否已存在了，防止高并发下产生多个实例
         if (!empty(self::$instanses[$instanceKey])) {
@@ -112,13 +112,12 @@ class AppFactory
             //自动获取
             $version = self::getVersion();
         }
-        
         //判断类文件是否存在
         $classNameLower = strtolower($className);
         $classFilePath = ROOT_PATH."/apps/{$version}/{$appName}/{$classNameLower}.php";
         if (!file_exists($classFilePath)) {
             //类文件不存在，则判断是否还要向上版本找
-            $extendsVersion  = self::config('Config',$version)->$extends;
+            $extendsVersion  = self::config('Config',$version)->extends;
             if (Validator::string()->notEmpty($extendsVersion)) {
                 //配置了继承关系，递归向上找
                 return self::createInstance($appName, $className, $extendsVersion);
@@ -128,6 +127,7 @@ class AppFactory
             }
         }
         //找到了类，则实例化返回
+        $version = strtoupper($version);
         $classNameSpace = "\\Apps\\{$version}\\{$appName}\\{$className}";
         return new $classNameSpace();
     }

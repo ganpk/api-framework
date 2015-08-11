@@ -1,5 +1,5 @@
 <?php
-namespace Apps\V1\Config;
+namespace Apps\V2\Config\Dev;
 
 /**
  * 某版本下的全局配置文件
@@ -10,5 +10,5 @@ class Config
      * 当前版本继承到某版本，没有则为空
      * @var string
      */
-    public $extends = null;    
+    public $extends = 'v1';
 }

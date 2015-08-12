@@ -8,40 +8,15 @@ namespace Libs;
  */
 class CheckParam
 {
-	/**
-	 * 存放当前实例化类
-	 */
-	private static $instanse = null;
-	/**
-	 * 参数
-	 * @var array
-	 */
-	private static $param = array();
-	/**
-	 * 是否必须
-	 * @var boolean
-	 */
-	private static $require = false;
-	/**
-	 * 默认值
-	 * @var mixed
-	 */
-	private static $default;
-	
-	final protected function __construct($param)
-	{
-		self::$param = $param;
-	}
-	
 	public static function instance($param)
 	{
 		if (!is_array($param)) {
 			throw new \Exception('参数只能是数组');
 		}
-		if (self::$instance == null) {
-			self::$instance = new self($param);
-		}
-		return self::$instance;
+		$obj = new self();
+		$obj->param = $param;
+		$obj->require = false;
+		return $obj;
 	}
 	/**
 	 * 是否必须
@@ -49,9 +24,10 @@ class CheckParam
 	 */
 	public function isRequire($require)
 	{
-		if ($require) {
-			self::$require=true;
+		if ($require==true) {
+			$this->require=true;
 		}
+		return $this;
 	}
 	/**
 	 * 默认值
@@ -59,7 +35,8 @@ class CheckParam
 	 */
 	public function defaultValue($value)
 	{
-		self::$default = $value;
+		$this->default = $value;
+		return $this;
 	}
 	/**
 	 * 要检查的某参数
@@ -67,18 +44,14 @@ class CheckParam
 	 */
 	public function check($key)
 	{
-		if (self::$require) {
-			if (!isset(self::$param[$key])) {
-				throw new \Exceptions\CheckParamException(\Config\ParamsRule::$rules[$k]['desc']);
-			} else {
-				return self::$param[$key];
+		if (!isset($this->param[$key])) {
+			if ($this->require) {
+				throw new \Exceptions\CheckParamException(\Config\ParamsRule::$rules[$key]['desc']);
+			}else{
+				return $this->default;
 			}
-		}else{
-			if (!isset(self::$param[$key])) {
-				return self::$default;
-			} else {
-				return self::$param[$key];
-			}
+		} else {
+			return $this->param[$key];
 		}
 	}
 }

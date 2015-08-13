@@ -13,11 +13,12 @@ class Demo extends BaseApi
      * 测试方法
      * @param $params
      */
-    public function test($params)
+    public function test()
     {
         //获取需要的参数
-        $productId = \Libs\CheckParam::instance($params)->isRequire(true)->check('productId');
-        $memberId = \Libs\CheckParam::instance($params)->defaultValue(0)->check('memberId');
+//        $productId = $this->getParam('productId',0);
+//        $productId = \Libs\CheckParam::instance($params)->isRequire(true)->check('productId');
+//        $memberId = \Libs\CheckParam::instance($params)->defaultValue(0)->check('memberId');
 
         //获取model数据
 //        $memberModel = \Libs\AppFactory::model('Member');

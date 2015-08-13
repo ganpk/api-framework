@@ -148,7 +148,8 @@ class Gateway
         }
 
         //调用相应api，响应数据
-        $result = \Libs\AppFactory::api($className, $versionName)->{$methodName}($this->http->request->post);
+        \Libs\AppFactory::api($className, $versionName)->params = $this->http->request->post;
+        $result = \Libs\AppFactory::api($className, $versionName)->{$methodName}();
         $this->output(\Config\Code::$SUCCESS, $result);
     }
     

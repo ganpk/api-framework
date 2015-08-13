@@ -4,7 +4,6 @@ namespace Config;
 /**
  * 
  * API统一code定义类，里面的属性相当于常量，不要去修改
- * TODO:msg不需要定义，程序自动拿注释作为后面的msg
  * @static
  *
  */

@@ -13,7 +13,10 @@ class BaseApi
      * 存放当前实例化类
      * @var Object HandlerNamespace
      */
-    private static $instance = null;
+    protected static $instance = null;
+
+    //请求当前api的参数
+    public $params = array();
 
     /**
      * 单例模式禁止外部实例化

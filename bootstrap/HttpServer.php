@@ -100,6 +100,8 @@ class HttpServer
         //TODO:还要再调整下顺序，包括增加命名空间等全移到这儿，以免重启不生效
         //定义环境运行模式
         \Bootstrap\RunMod::init();
+        //创建连接数据库资源
+        \Libs\DbManager::connect();
     }
     
     

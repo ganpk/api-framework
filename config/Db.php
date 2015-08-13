@@ -14,18 +14,35 @@ class Db
      * mysqlÅäÖÃ
      * @var array
      */
-    public static $mysql = array(
+//    public static $mysql = array(
+//        'read' => [
+//            '192.168.1.1',
+//        ],
+//        'write' => [
+//            '196.168.1.2'
+//        ],
+//        'database'  => 'database',
+//        'username'  => 'root',
+//        'password'  => '',
+//        'charset'   => 'utf8',
+//        'collation' => 'utf8_unicode_ci',
+//        'prefix'    => '',
+//    );
+
+    public static $mysql = [
+        'driver'    => 'mysql',
         'read' => [
-            '192.168.1.1',
+            'host' => '127.0.0.1',
         ],
         'write' => [
-            '196.168.1.2'
+            'host' => '127.0.0.1'
         ],
-        'database'  => 'database',
+        'database'  => 'test',
         'username'  => 'root',
-        'password'  => '',
+        'password'  => '123456',
         'charset'   => 'utf8',
         'collation' => 'utf8_unicode_ci',
-        'prefix'    => '',
-    );
+        'prefix'    => 'test_',
+    ];
+
 }

@@ -46,7 +46,14 @@ class Gateway
         }
         
         //分发任务
-        $this->dispatcher();
+        try{
+            $this->dispatcher();
+        } catch (\PDOException $e) {
+            print_r($e->getTrace());
+            echo '-------'.PHP_EOL;
+            print_r($e->getMessage());
+        }
+
     }
     
     /**

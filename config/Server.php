@@ -55,7 +55,7 @@ class Server
          | 但开的进程越多，占用的内存就会大大增加，而且进程间切换的开销就会越来越大。所以这里适当即可。不要配置过大。
          | 每个进程占用40M内存，那100个进程就需要占用4G内存
          */
-        'worker_num' => 4,
+        'worker_num' => 1,
         
         /*
          | reactor线程数，reactor_num => 2，通过此参数来调节主进程内事件处理线程的数量，以充分利用多核。默认会启用CPU核数相同的数量。
@@ -66,7 +66,7 @@ class Server
          | reactor_num必须小于或等于worker_num。如果设置的reactor_num大于worker_num，那么swoole会自动调整使reactor_num等于worker_num
          | 1.7.14以上版本在超过8核的机器上reactor_num默认设置为8
          */
-        'reactor_num' => '4',
+        'reactor_num' => '1',
         
         /*
          | 设置worker进程的最大任务数。一个worker进程在处理完超过此数值的任务后将自动退出。这个参数是为了防止PHP进程内存溢出。

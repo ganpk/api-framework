@@ -1,6 +1,9 @@
 <?php
 namespace Apps\V1\Apis;
 
+use Illuminate\Container\Container;
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 /**
  * API »ùÀà
  * µ¥Àý

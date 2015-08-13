@@ -52,10 +52,10 @@ class Gateway
             //操作数据库出错
             //TODO:异常错误记录日志
             $this->output(\Config\Code::$CATCH_EXCEPTION);
-        } catch (\Exceptions\CheckParamException $e) {
+        } catch (\Exceptions\ParamException $e) {
             //参数出错
             $codeInfo = \Config\Code::$ELLEGAL_PARAMS;
-            $codeInfo['msg'] = sprintf($codeInfo['msg'],$e->getMessage());
+            $codeInfo['msg'] = sprintf($codeInfo['msg'], $e->getMessage());
             $this->output($codeInfo);
         } catch (\Exception $e) {
             //系统异常

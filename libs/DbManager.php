@@ -4,24 +4,22 @@ namespace Libs;
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
 /**
- * Êý¾Ý¿â¹ÜÀíÀà
+ * dbç®¡ç†ç±»
  * Class Db
  * @package Libs
  */
 class DbManager
 {
     /**
-     * Á¬½ÓÊý¾Ý¿â
-     * ÕâÀï²¢Ã»ÓÐÕæÕýµÄÁ¬½Ó£¬ÒòÎª»¹Ã»ÓÐÊ¹ÓÃ£¬Ö»ÊÇÌí¼ÓÁËÁ¬½ÓÐÅÏ¢
+     * å‘ormä¸­æ·»åŠ è¿žæŽ¥ä¿¡æ¯
+     * æ­¤æ—¶å¹¶æœªè¿žæŽ¥ï¼Œå¦‚æžœæœ‰ä½¿ç”¨æ—¶æ‰ä¼šè¿žæŽ¥
      */
     public static function connect()
     {
         $capsule = new Capsule();
-        // ´´½¨Á´½Ó
-        $capsule->addConnection(\Config\Db::$mysql);
-        // ÉèÖÃÈ«¾Ö¾²Ì¬¿É·ÃÎÊ
+        $runMod = RUN_MOD;
+        $capsule->addConnection(\Config\Db::$environments[$runMod]);
         $capsule->setAsGlobal();
-        // Æô¶¯Eloquent
         $capsule->bootEloquent();
     }
 }

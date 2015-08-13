@@ -7,19 +7,22 @@ use Libs;
  * Class Demo
  * @package Apps\V1\Apis
  */
-class Demo extends \Apps\V1\Apis\BaseApi
+class Demo extends BaseApi
 {
-    public static $is = 0;
+    /**
+     * 测试方法
+     * @param $params
+     */
     public function test($params)
     {
+        //获取需要的参数
         $productId = \Libs\CheckParam::instance($params)->isRequire(true)->check('productId');
         $memberId = \Libs\CheckParam::instance($params)->defaultValue(0)->check('memberId');
-        echo '-----------------' . PHP_EOL;
-        if (self::$is == 0) {
-            $result = \Apps\V1\Models\Member::find(1)->toArray();
-            self::$is = 1;
-        } else {
-            $result = \Apps\V1\Models\Member::whereRaw('ids > ?', array(1))->get()->toArray();
-        }
+
+        //获取model数据
+//        $memberModel = \Libs\AppFactory::model('Member');
+//        $result = $memberModel::find(1)->toArray();
+        $result = \Libs\AppFactory::module('Demo')->test();
+        return $result;
     }
 }

@@ -49,9 +49,18 @@ class Gateway
         try{
             $this->dispatcher();
         } catch (\PDOException $e) {
-            print_r($e->getTrace());
-            echo '-------'.PHP_EOL;
-            print_r($e->getMessage());
+            //操作数据库出错
+            //TODO:异常错误记录日志
+            $this->output(\Config\Code::$CATCH_EXCEPTION);
+        } catch (\Exceptions\CheckParamException $e) {
+            //参数出错
+            $codeInfo = \Config\Code::$ELLEGAL_PARAMS;
+            $codeInfo['msg'] = sprintf($codeInfo['msg'],$e->getMessage());
+            $this->output($codeInfo);
+        } catch (\Exception $e) {
+            //系统异常
+            //TODO:异常错误记录日志
+            $this->output(\Config\Code::$CATCH_EXCEPTION);
         }
 
     }
@@ -132,8 +141,9 @@ class Gateway
         $methodName  = $uriParse[2];
 
         //检查并过滤参数
-        if (!$this->checkParams()) {
-            //参数不合法,checkParams方法已经响应给了客户端调用信息
+        $errorInfo = $this->getCheckParamsErrorInfo();
+        if (!empty($errorInfo)) {
+            $this->output($errorInfo);
             return;
         }
 
@@ -154,11 +164,12 @@ class Gateway
         $uri = str_replace('.', '', $uri);
         $this->http->request->server['request_uri'] = $uri;
     }
-    
+
     /**
-     * 检查参数
+     * 获取检查参数的错误信息
+     * @return array 返回错误信息code数组，如果为空表示参数正确
      */
-    private function checkParams()
+    private function getCheckParamsErrorInfo()
     {
         $params = $this->http->request->post;
         if (count($params) > 0) {
@@ -172,13 +183,12 @@ class Gateway
                     if (!$this->validatorParam($v,\Config\ParamsRule::$rules[$k])) {
                         $codeArr = \Config\Code::$ELLEGAL_PARAMS;
                         $codeArr['msg'] = sprintf($codeArr['msg'], \Config\ParamsRule::$rules[$k]['desc'].'错误');
-                        $this->output($codeArr);
-                        return false;
+                        return $codeArr;
                     }
                 }
             }
         }
-        return true;
+        return array();
     }
     
     /**

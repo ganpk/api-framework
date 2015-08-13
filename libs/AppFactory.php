@@ -41,7 +41,7 @@ class AppFactory
     /**
      * 获取model对象
      * @param $className model的类名
-     * @return object
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public static function model($className)
     {
@@ -93,7 +93,6 @@ class AppFactory
                 $classFilePath = ROOT_PATH."/apps/{$version}/{$appName}/{$classNameLower}.php";
                 $classNameSpace = "\\Apps\\{$version}\\{$appName}\\{$className}";
             }
-            echo $classNameSpace.PHP_EOL;
         } else {
             $classFilePath = ROOT_PATH."/apps/{$version}/{$appName}/{$classNameLower}.php";
             $classNameSpace = "\\Apps\\{$version}\\{$appName}\\{$className}";
@@ -111,10 +110,13 @@ class AppFactory
             }
         }
 
-        //找到了类，则实例化返回
+        //找到了类
         if ($appName == 'config') {
             //config不是单例模式，new后返回
             return new $classNameSpace();
+        } elseif ($appName == 'models') {
+            //如果获取的是model，则返回此类的空间路径
+            return $classNameSpace;
         } else {
             return $classNameSpace::instance();
         }

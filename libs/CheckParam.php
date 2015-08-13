@@ -8,6 +8,12 @@ namespace Libs;
  */
 class CheckParam
 {
+	/**
+	 * @param $param
+	 * @return CheckParam
+	 * @throws \Exception
+	 * @return CheckParam
+	 */
 	public static function instance($param)
 	{
 		if (!is_array($param)) {
@@ -46,7 +52,7 @@ class CheckParam
 	{
 		if (!isset($this->param[$key])) {
 			if ($this->require) {
-				throw new \Exceptions\CheckParamException(\Config\ParamsRule::$rules[$key]['desc']);
+				throw new \Exceptions\CheckParamException(\Config\ParamsRule::$rules[$key]['desc']."参数{$key}缺失");
 			}else{
 				return $this->default;
 			}

@@ -13,16 +13,18 @@ class RunMod
     public static function init()
     {
         $hostname = gethostname();
+        $runMod = '';
         foreach (\Config\Config::$hostnameRule as $k=>$v) {
             if (preg_match($k, $hostname)) {
                 //找到了按规则
-                define('RUN_MOD', $v);
+                $runMod = $v;
                 break;
             }
         }
-        if (!defined('RUN_MOD')) {
+        if ($runMod == '') {
             //没有匹配到规则，则心主机名表示当前RUN_MOD值
-            define('RUN_MOD', $hostname);
+            $runMod = $hostname;
         }
-    } 
+        define('RUN_MOD', $runMod);
+    }
 }

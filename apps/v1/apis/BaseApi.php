@@ -1,43 +1,42 @@
 <?php
+
 namespace Apps\V1\Apis;
 
-use Illuminate\Container\Container;
-use Illuminate\Database\Capsule\Manager as Capsule;
-
 /**
- * API »ùÀà
- * µ¥Àý
+ * API åŸºç±»
  * Class BaseApi
- * @package Apps\v1\apis
+ * @package Apps\V1\Apis
  */
 class BaseApi
 {
-    /** µ±Ç°ÀàµÄÊµÀý»¯¶ÔÏó
-     * @var BaseApi
-     */
-    protected static $instance = null;
     /**
-     * µ¥ÀýÄ£Ê½½ûÖ¹Íâ²¿ÊµÀý»¯
+     * å­˜æ”¾å½“å‰å®žä¾‹åŒ–ç±»
+     * @var Object HandlerNamespace
      */
-    final protected function __construct()
+    private static $instance = null;
+
+    /**
+     * å•ä¾‹æ¨¡å¼ç¦æ­¢å¤–éƒ¨å®žä¾‹åŒ–
+     */
+    final private function __construct()
     {
     }
 
     /**
-     * µ¥ÀýÄ£Ê½½ûÖ¹Íâ²¿¿ËÂ¡
+     * å•ä¾‹æ¨¡å¼ç¦æ­¢å¤–éƒ¨å…‹éš†
      */
-    final protected function __clone()
+    final private function __clone()
     {
     }
 
     /**
-     * »ñÈ¡BaseApiÊµÀý
-     * @return BaseApi
+     * èŽ·å–å®žä¾‹åŒ–å¯¹è±¡
+     * @return object
      */
-    final public static function instance()
+    public static function instance()
     {
-        if (self::$instance === null) {
-           $class = get_called_class();
+        if (self::$instance == null) {
+            $class = get_called_class();
             self::$instance = new $class();
         }
         return self::$instance;

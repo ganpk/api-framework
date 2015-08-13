@@ -4,6 +4,7 @@ namespace Config;
 /**
  * 
  * API统一code定义类，里面的属性相当于常量，不要去修改
+ * TODO:msg不需要定义，程序自动拿注释作为后面的msg
  * @static
  *
  */
@@ -43,7 +44,7 @@ class Code
      * 参数不正确
      * @var array
      */
-    public static $ELLEGAL_PARAMS = ['code'  => '-5', 'msg' => '参数不正确：%s'];
+    public static $ELLEGAL_PARAMS = ['code'  => '-5', 'msg' => '参数异常：%s'];
 
     /**
      * 请求API不存在

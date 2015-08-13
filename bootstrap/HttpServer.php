@@ -13,12 +13,6 @@ class HttpServer
     private static $instance = null;
     
     /**
-     * 是否正在运行中
-     * @var boolean
-     */
-    private static $isRuning = false;
-    
-    /**
      * tcp server 的实例化对象
      * @var swoole_http_server
      */
@@ -55,25 +49,19 @@ class HttpServer
      */
     public function start() 
     {
-        if (self::$isRuning) {
-            //已经运行了，不需要再运行一次
-            return;
-        }
         //监听端口
+        require ROOT_PATH.'/config/Server.php';
         $this->serv = new \swoole_http_server(\Config\Server::$listen['ip'], \Config\Server::$listen['port']);
-
-        //标记状态为正在运行
-        self::$isRuning = true;
         
         //配置sever
         $this->serv->set(\Config\Server::$settings);
-        
+
+        //注册worker进程启动回调
+        $this->serv->on('WorkerStart', array($this, 'onWorkerStart'));
+
         //注册请求数据完整后的回调方法
         $this->serv->on('request' , array($this, 'onRequest'));
-        
-        //TODO；1.平滑重启，2.修改代码自动reload
-        $this->serv->on('WorkerStart', array($this, 'onWorkerStart'));
-        
+
         //启动服务器
         $this->serv->start();
     }
@@ -85,6 +73,9 @@ class HttpServer
      */
     public function onRequest($request, $response)
     {
+        //创建连接数据库资源。
+        //TODO:目前是每次都要连接，为了减少连接次数，需要移到onWorkerStart中，也就是一个worker进程使用一个连接，需要在ORM中处理断线重连
+        \Libs\DbManager::connect();
         //上下文信息保存到Http类中,并转移给gateway网关层处理响应
         new \Bootstrap\Gateway(new \Bootstrap\Http($request, $response));
     }
@@ -96,15 +87,14 @@ class HttpServer
      */
     public function onWorkerStart($serv, $worker_id)
     {
-        //TODO:是否需要生成重启的shell文件
-        //TODO:还要再调整下顺序，包括增加命名空间等全移到这儿，以免重启不生效
+        //引入自动加载类
+        $loader = require './vendor/autoload.php';
+
+        //注册根命名空间对应的目录关系到自动加载类中
+        require './bootstrap/RegistNamespace.php';
+        \Bootstrap\RegistNameSpace::instance(ROOT_PATH,['vendor','documents'],$loader)->register();
+
         //定义环境运行模式
         \Bootstrap\RunMod::init();
-        //创建连接数据库资源
-        \Libs\DbManager::connect();
     }
-    
-    
-    
-    
 }

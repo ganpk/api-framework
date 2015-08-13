@@ -92,7 +92,7 @@ class HttpServer
 
         //注册根命名空间对应的目录关系到自动加载类中
         require './bootstrap/RegistNamespace.php';
-        \Bootstrap\RegistNameSpace::instance(ROOT_PATH,['vendor','documents'],$loader)->register();
+        \Bootstrap\RegistNameSpace::instance(ROOT_PATH, ['vendor','documents', 'shell', 'data'], $loader)->register();
 
         //定义环境运行模式
         \Bootstrap\RunMod::init();

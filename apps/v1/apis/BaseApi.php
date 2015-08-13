@@ -15,7 +15,10 @@ class BaseApi
      */
     protected static $instance = null;
 
-    //请求当前api的参数
+    /**
+     * 请求当前api的参数
+     * @var array
+     */
     public $params = array();
 
     /**
@@ -43,5 +46,24 @@ class BaseApi
             self::$instance = new $class();
         }
         return self::$instance;
+    }
+    
+    /**
+     * 获取某一参数
+     * @param string $key 参数名
+     * @param mixed $dafult 默认值
+     */
+    public function getParam($key, $dafult = null)
+    {
+    	if (!isset($this->params[$key])) {
+    		$argsCount = func_num_args();
+    		if ($argsCount == 1 && $dafult === null) {
+    			throw new \Exceptions\ParamException(\Config\ParamsRule::$rules[$key]['desc']."参数{$key}缺失");
+    		}else{
+    			return $default;
+    		}
+    	} else {
+    		return $this->params[$key];
+    	}
     }
 }

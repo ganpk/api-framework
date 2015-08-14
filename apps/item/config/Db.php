@@ -1,5 +1,5 @@
 <?php
-namespace Config;
+namespace Apps\Item\Config;
 
 /**
  * 数据库配置
@@ -7,13 +7,13 @@ namespace Config;
  * Class Db
  * @package Config
  */
-class Db
+class Db extends \Core\Libs\AppBaseConfig
 {
     /**
      * 各环境下的配置
      * @var array
      */
-    public static $environments = [
+    public static $mysql = [
         'dev' => [
             'driver'    => 'mysql',
             'read' => [
@@ -30,4 +30,12 @@ class Db
             'prefix'    => 'test_',
         ],
     ];
+
+    /**
+     * 实例化方法
+     */
+    public static function instance()
+    {
+        $obj->instance();
+    }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Bootstrap;
+namespace Core\Bootstrap;
 
 use Respect\Validation\Validator;
 
@@ -21,7 +21,7 @@ class Gateway
      * 构造方法
      * @param Http $http
      */
-    public function __construct(\Bootstrap\Http $http)
+    public function __construct(\Core\Bootstrap\Http $http)
     {
         //保存http实例
         $this->http = $http;
@@ -32,13 +32,13 @@ class Gateway
             //检查数据包的签名是否正确
             $signature = empty($this->http->dataSignature) ? '' : $this->http->dataSignature;
             $signature = Validator::string()->length(1)->validate($signature) ? $signature : '';
-            if ($signature == '' || !\Bootstrap\Auth::isRightPackDataSignature($this->http->request->server['request_uri'], $this->http->request->post, $signature)) {
+            if ($signature == '' || !\Core\Bootstrap\Auth::isRightPackDataSignature($this->http->request->server['request_uri'], $this->http->request->post, $signature)) {
                 //认证未通过
                 $this->output(\Config\Code::$AUTH_PACK_DATA_FAIL);
                 return;
             }
             //检查用户签名是否正确
-            if (!\Bootstrap\Auth::isRightMemberSignature($this->http->memberId, $this->http->memberSignature)) {
+            if (!\Core\Bootstrap\Auth::isRightMemberSignature($this->http->memberId, $this->http->memberSignature)) {
                 //认证未通过
                 $this->output(\Config\Code::$AUTH_MEMBER_FAIL);
                 return;

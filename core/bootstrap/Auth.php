@@ -1,5 +1,5 @@
 <?php
-namespace Bootstrap;
+namespace Core\Bootstrap;
 
 use Respect\Validation\Validator;
 

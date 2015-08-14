@@ -1,5 +1,5 @@
 <?php
-namespace Bootstrap;
+namespace Core\Bootstrap;
 
 /**
  * 制定运行模式
@@ -12,17 +12,19 @@ class RunMod
      */
     public static function init()
     {
+        //引入配置文件，此时
+        $envConfig = require ROOT_PATH.'/config/Env.php';
         $hostname = gethostname();
         $runMod = '';
-        foreach (\Config\Config::$hostnameRule as $k=>$v) {
+        foreach ($envConfig as $k => $v) {
             if (preg_match($k, $hostname)) {
-                //找到了按规则
+                //配置到了主机
                 $runMod = $v;
                 break;
             }
         }
         if ($runMod == '') {
-            //没有匹配到规则，则心主机名表示当前RUN_MOD值
+            //没有匹配到主机，则以主机名表示当前RUN_MOD值
             $runMod = $hostname;
         }
         define('RUN_MOD', $runMod);

@@ -2,7 +2,7 @@
 namespace Config;
 
 /**
- * 运行环境配置文件
+ * 全局配置文件
  */
 class Config
 {

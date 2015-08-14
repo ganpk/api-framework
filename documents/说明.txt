@@ -1,3 +1,2 @@
-post���ݲ��� php://input��ʽ
+1.一定要关闭opcahce，否则重启不会生效
 
-�ر�opcahce

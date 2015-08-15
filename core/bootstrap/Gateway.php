@@ -74,8 +74,8 @@ class Gateway
     {
         //准备参数
         $codeData = empty($codeData) ? array() : $codeData;
-        $result   = empty($result)   ? new \stdClass() : $result;
-        $extData  = empty($extData)  ? new \stdClass() : $extData;
+        $result   = empty($result)   ? array() : $result;
+        $extData  = empty($extData)  ? array() : $extData;
         
         //检查参数是否合法
         if (!Validator::int()->validate($codeData['code'])) {
@@ -84,14 +84,6 @@ class Gateway
         }
         $codeData['msg'] = (empty($codeData['msg']) || !is_string($codeData['msg'])) ? '' : $codeData['msg'];
 
-        //转换数组为对象
-        if (is_array($result)) {
-            $result = json_decode(json_encode($result));
-        }
-        if (!is_array($extData)) {
-            $extData = json_decode(json_encode($extData));
-        }
-        
         //统一响应的数据结构
         $resTplData = [
             'code' => $codeData['code'],
@@ -100,7 +92,19 @@ class Gateway
             'extData' => $extData,
             'result'  => $result
         ];
-        
+
+        //转换成驼峰风格
+        \Core\Libs\Json::converToHump($resTplData, \Config\HumpMap::$map);
+
+        //转换数组为对象，主要是统一result和extData下面不直接使用数据
+        if (is_array($resTplData['result'])) {
+            $resTplData['result'] = json_decode(json_encode($result));
+        }
+        if (is_array($extData)) {
+            $resTplData['extData'] = json_decode(json_encode($extData));
+        }
+
+        //响应给客户端
         $this->response(json_encode($resTplData));
     }
     
@@ -111,6 +115,7 @@ class Gateway
      */
     private function response($content = '', $statusCode = 200)
     {
+        //统一将json数据过滤为驼峰风格
         $this->http->response->status = $statusCode;
         $this->http->response->end($content);
     }

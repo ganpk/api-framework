@@ -120,7 +120,7 @@ class RegistNameSpace
                 closedir($dh);
                 self::$isHandled = true;
             } else {
-                throw new \Exceptions\RegistNamespaceException('不能找开目录'.$dir);
+                throw new \Core\Exceptions\RegistNamespaceException('不能找开目录'.$dir);
             }
         }
     }

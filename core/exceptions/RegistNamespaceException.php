@@ -1,5 +1,5 @@
 <?php
-namespace Exceptions;
+namespace Core\Exceptions;
 
 /**
  * 注册命名空间异常类

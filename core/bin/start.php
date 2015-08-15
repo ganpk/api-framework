@@ -9,30 +9,6 @@
  * 开启服务
  */
 
-class t
-{
-    protected $instance = null;
-
-    /**
-     * @return t
-     */
-    public static function instance()
-    {
-        $obj = new self();
-        print_r(get_object_vars($obj));
-        unset($obj->a);
-        return $obj;
-    }
-
-    public function __get($k){
-        echo '11111111';
-    }
-}
-
-$t = t::instance();
-echo $t->a;
-exit;
-
 error_reporting(E_ALL);
 ini_set('display_errors','On');
 

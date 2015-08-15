@@ -1,5 +1,5 @@
 <?php
-namespace Apps\V1\Apis;
+namespace Apps\Item\App\V1\Apis;
 
 use Libs;
 /**
@@ -21,7 +21,7 @@ class Demo extends BaseApi
         //获取model数据
 //        $memberModel = \Libs\AppFactory::model('Member');
 //        $result = $memberModel::find(1)->toArray();
-        $result = \Libs\AppFactory::module('Demo')->test();
+        $result = \Core\Libs\AppFactory::module('Demo')->test();
         return $result;
     }
 }

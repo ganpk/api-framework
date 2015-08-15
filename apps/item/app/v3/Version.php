@@ -1,5 +1,5 @@
 <?php
-namespace Apps\Item\App\V1;
+namespace Apps\Item\App\V3;
 
 /**
  * 版本配置文件
@@ -12,5 +12,5 @@ class Version
      * 继承版本，如果没有则填写null
      * @var string/null
      */
-    public static $extends = null;
+    public static $extends = 'v2';
 }

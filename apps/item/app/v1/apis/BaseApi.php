@@ -1,6 +1,5 @@
 <?php
-
-namespace Apps\V1\Apis;
+namespace Apps\Item\App\V1\Apis;
 
 /**
  * API 基类
@@ -57,10 +56,10 @@ class BaseApi
     {
     	if (!isset($this->params[$key])) {
     		$argsCount = func_num_args();
-    		if ($argsCount == 1 && $dafult === null) {
+    		if ($argsCount == 1) {
     			throw new \Exceptions\ParamException(\Config\ParamsRule::$rules[$key]['desc']."参数{$key}缺失");
     		}else{
-    			return $default;
+    			return $dafult;
     		}
     	} else {
     		return $this->params[$key];

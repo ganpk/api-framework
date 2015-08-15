@@ -1,5 +1,5 @@
 <?php
-namespace Libs;
+namespace Core\Libs;
 
 use Respect\Validation\Validator;
 
@@ -75,34 +75,21 @@ class AppFactory
         if ($version == null) {
             throw new \Exception('未发现版本号');
         }
+
         //判断类文件是否存在
         $classNameLower = strtolower($className);
-
-        //判断是否是获取的配置，如果应该加载当前环境配置文件
-        //类空间名称
-        $classNameSpace = '';
-        if ($appName == 'config') {
-            //获取配置
-            //优先找当前环境下的配置，没有则找全局下的配置
-            $env = RUN_MOD;
-            $envUpper = ucfirst($env);
-            $classFilePath = ROOT_PATH."/apps/{$version}/{$appName}/{$env}/{$classNameLower}.php";
-            $classNameSpace = "\\Apps\\{$version}\\{$appName}\\{$envUpper}\\{$className}";
-            if (!file_exists($classFilePath)) {
-                //定制环境中有配置文件，则拿全局的
-                $classFilePath = ROOT_PATH."/apps/{$version}/{$appName}/{$classNameLower}.php";
-                $classNameSpace = "\\Apps\\{$version}\\{$appName}\\{$className}";
-            }
-        } else {
-            $classFilePath = ROOT_PATH."/apps/{$version}/{$appName}/{$classNameLower}.php";
-            $classNameSpace = "\\Apps\\{$version}\\{$appName}\\{$className}";
-        }
-
+        $version = strtolower($version);
+        $versionFirstUpper = ucfirst($version);
+        $projectName = PROJECT_NAME;
+        $projectNameFirstUpper = ucfirst($projectName);
+        $classFilePath = ROOT_PATH."/apps/{$projectName}/app/{$version}/{$appName}/{$classNameLower}.php";
+        $classNameSpace = "\\Apps\\{$projectNameFirstUpper}\\App\\{$versionFirstUpper}\\{$appName}\\{$className}";
         if (!file_exists($classFilePath)) {
-            //类文件不存在，则判断是否还要向上版本找
-            $extendsVersion  = self::config('Version',$version)->extends;
+            //类文件不存在，则判断是否配置了继承版本
+            $versionClass = "\\Apps\\{$projectNameFirstUpper}\\App\\{$versionFirstUpper}\\Version";
+            $extendsVersion  = $versionClass::$extends;
             if ($extendsVersion != null) {
-                //配置了继承关系，递归向上找
+                //配置了继承，递归向上找
                 return self::getInstance($appName, $className, $extendsVersion);
             } else {
                 //找不到则抛出异常
@@ -111,15 +98,10 @@ class AppFactory
         }
 
         //找到了类
-        if ($appName == 'config') {
-            //config不是单例模式，new后返回
-            return new $classNameSpace();
-        } elseif ($appName == 'models') {
-            //如果获取的是model，则返回此类的空间路径
+        if ($appName == 'models') {
             return $classNameSpace;
-        } else {
-            return $classNameSpace::instance();
         }
+        return $classNameSpace::instance();
     }
     
     /**
@@ -130,12 +112,12 @@ class AppFactory
         //获取调用者文件名
         $debugInfo = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
         if (empty($debugInfo[1]['file'])) {
-            //指定是否某个不合法的地方调用了
+            //不合法的地方调用了
             throw new \Exception('not found version');
         }
-        $callerFile = $debugInfo[1]['file'];
         //获取版本号
-        $callerFile = str_replace(ROOT_PATH.'/apps/', '', $callerFile);
+        $callerFile = strtolower($debugInfo[1]['file']);
+        $callerFile = str_replace(ROOT_PATH.'/apps/'.PROJECT_NAME.'/app/', '', $callerFile);
         $version = substr($callerFile,0,strpos($callerFile, '/'));
         return $version;
     }

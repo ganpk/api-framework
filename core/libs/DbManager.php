@@ -1,5 +1,5 @@
 <?php
-namespace Libs;
+namespace Core\Libs;
 
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -17,8 +17,10 @@ class DbManager
     public static function connect()
     {
         $capsule = new Capsule();
-        $runMod = RUN_MOD;
-        $capsule->addConnection(\Config\Db::$environments[$runMod]);
+        $projectName = ucfirst(PROJECT_NAME);
+        //TODO:加载配置文件，这种方式是非常不是好的，后面优化掉
+        $configClass = "\\Apps\\{$projectName}\\Config\\Db";
+        $capsule->addConnection($configClass::instance()->mysql);
         $capsule->setAsGlobal();
         $capsule->bootEloquent();
     }

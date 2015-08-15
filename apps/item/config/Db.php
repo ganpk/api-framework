@@ -13,29 +13,19 @@ class Db extends \Core\Libs\AppBaseConfig
      * 各环境下的配置
      * @var array
      */
-    public static $mysql = [
-        'dev' => [
-            'driver'    => 'mysql',
-            'read' => [
-                'host' => '127.0.0.1',
-            ],
-            'write' => [
-                'host' => '127.0.0.1'
-            ],
-            'database'  => 'test',
-            'username'  => 'root',
-            'password'  => '123456',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => 'test_',
+    public $mysql = [
+        'driver'    => 'mysql',
+        'read' => [
+            'host' => '127.0.0.1',
         ],
+        'write' => [
+            'host' => '127.0.0.1'
+        ],
+        'database'  => 'test',
+        'username'  => 'root',
+        'password'  => '123456',
+        'charset'   => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'prefix'    => 'test_',
     ];
-
-    /**
-     * 实例化方法
-     */
-    public static function instance()
-    {
-        $obj->instance();
-    }
 }

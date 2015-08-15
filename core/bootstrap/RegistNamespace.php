@@ -111,9 +111,9 @@ class RegistNameSpace
             $dh = opendir($dir);
             if ($dh) {
                 while (($file = readdir($dh)) !== false) {
-                    if (is_dir($file) && strpos($file, '.') !==0 ){
+                    $path = $dir.'/'.$file;
+                    if (is_dir($path) && strpos($file, '.') !==0 ){
                         $namespace = ucfirst($file).'\\';
-                        $path = $dir.'/'.$file;
                         $this->classLoader->setPsr4($namespace,$path);
                     }
                 }

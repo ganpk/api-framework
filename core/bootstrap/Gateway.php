@@ -50,7 +50,7 @@ class Gateway
             $this->dispatcher();
         } catch (\PDOException $e) {
             //操作数据库出错
-            //TODO:异常错误记录日志
+            \Core\Libs\Ioc::make('logs')->addError($e->getMessage());
             $this->output(\Config\Code::$CATCH_EXCEPTION);
         } catch (\Exceptions\ParamException $e) {
             //参数出错
@@ -59,10 +59,9 @@ class Gateway
             $this->output($codeInfo);
         } catch (\Exception $e) {
             //系统异常
-            //TODO:异常错误记录日志
+            \Core\Libs\Ioc::make('logs')->addError($e->getMessage());
             $this->output(\Config\Code::$CATCH_EXCEPTION);
         }
-
     }
     
     /**
@@ -148,8 +147,8 @@ class Gateway
         }
 
         //调用相应api，响应数据
-        \Libs\AppFactory::api($className, $versionName)->params = $this->http->request->post;
-        $result = \Libs\AppFactory::api($className, $versionName)->{$methodName}();
+        \Core\Libs\AppFactory::api($className, $versionName)->params = $this->http->request->post;
+        $result = \Core\Libs\AppFactory::api($className, $versionName)->{$methodName}();
         $this->output(\Config\Code::$SUCCESS, $result);
     }
     

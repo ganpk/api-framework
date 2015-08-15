@@ -132,6 +132,9 @@ class HttpServer
         //注册根命名空间对应的目录关系到自动加载类中
         require ROOT_PATH.'/core/bootstrap/RegistNamespace.php';
         \Core\Bootstrap\RegistNameSpace::instance(ROOT_PATH, ['vendor', 'documents', 'logs'], $loader)->register();
+
+        //注入核心服务
+        \Core\Bootstrap\Depend::inject();
     }
     
     /**
@@ -143,7 +146,7 @@ class HttpServer
     {
         //创建连接数据库资源。
         //TODO:目前是每次都要连接，为了减少连接次数，需要移到onWorkerStart中，也就是一个worker进程使用一个连接，需要在ORM中处理断线重连
-        \Libs\DbManager::connect();
+        \Core\Libs\DbManager::connect();
         //上下文信息保存到Http类中,并转移给gateway网关层处理响应
         new \Core\Bootstrap\Gateway(new \Core\Bootstrap\Http($request, $response));
     }

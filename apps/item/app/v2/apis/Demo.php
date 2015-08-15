@@ -1,5 +1,5 @@
 <?php
-namespace Apps\V2\Apis;
+namespace Apps\Item\App\V2\Apis;
 
 use Libs;
 /**
@@ -7,7 +7,7 @@ use Libs;
  * Class Demo
  * @package Apps\V1\Apis
  */
-class Demo extends \Apps\V1\Apis\Demo
+class Demo extends \Apps\Item\App\V1\Apis\Demo
 {
     /**
      * 测试方法

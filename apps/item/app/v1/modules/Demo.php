@@ -1,8 +1,5 @@
 <?php
-namespace Apps\V1\Modules;
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+namespace Apps\Item\App\V1\Modules;
 
 /**
  * 示例module
@@ -13,10 +10,6 @@ class Demo extends BaseModule
 {
     public function test()
     {
-        $log = new Logger('逻辑错误');
-        $log->pushHandler(new StreamHandler('php://stdout', Logger::WARNING));
-        // add records to the log
-        $log->addWarning('Foo',array('A'=>'B','C'=>'D'));
         return array('demo' => 'hello world module v1 test method');
     }
 }

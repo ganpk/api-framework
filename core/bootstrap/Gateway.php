@@ -82,7 +82,12 @@ class Gateway
             //code参数不合法，写入日志
             $codeData = \Config\Code::$CATCH_EXCEPTION;
         }
-        $codeData['msg'] = (empty($codeData['msg']) || !is_string($codeData['msg'])) ? '' : $codeData['msg'];
+
+        //处理msg
+        if (empty($codeData['msg']) || !is_string($codeData['msg'])) {
+            //没有传，则自动拿注释
+            $codeData['msg'] = \Core\Libs\Utility::getCodeAnnotation($codeData['code']);
+        }
 
         //统一响应的数据结构
         $resTplData = [
@@ -139,7 +144,7 @@ class Gateway
             return;
         }
 
-        //分发给相应处理者进行处理
+        //分发给相应处理者的相关参数
         $versionName = $uriParse[0];
         $className   = ucfirst($uriParse[1]);
         $methodName  = $uriParse[2];
@@ -152,9 +157,16 @@ class Gateway
         }
 
         //调用相应api，响应数据
-        \Core\Libs\AppFactory::api($className, $versionName)->params = $this->http->request->post;
-        $result = \Core\Libs\AppFactory::api($className, $versionName)->{$methodName}();
-        $this->output(\Config\Code::$SUCCESS, $result);
+        $api = \Core\Libs\AppFactory::api($className, $versionName);
+        $api->params = $this->http->request->post;
+        $result = $api->{$methodName}();
+        //响应数据
+        if (empty($result['codeData'])) {
+            throw new \Exception('响应数据时没有codeData键');
+        }
+        $result['result']  = empty($result['result']) ? array() : $result['result'];
+        $result['extData'] = empty($result['extData']) ? array() : $result['extData'];
+        $this->output($result['codeData'], $result['result'], $result['extData']);
     }
     
     /**
@@ -187,6 +199,7 @@ class Gateway
                     //在规则中，则验证是否符合规则
                     if (!$this->validatorParam($v,\Config\ParamsRule::$rules[$k])) {
                         $codeArr = \Config\Code::$ELLEGAL_PARAMS;
+                        $codeArr['msg'] = \Core\Libs\Utility::getCodeAnnotation(\Config\Code::$ELLEGAL_PARAMS['code']);
                         $codeArr['msg'] = sprintf($codeArr['msg'], \Config\ParamsRule::$rules[$k]['desc'].'错误');
                         return $codeArr;
                     }

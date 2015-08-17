@@ -42,4 +42,34 @@ class Utility
         }
         $arr = $newArr;
     }
+
+    /**
+     * 获取某code的注释
+     * @param int $code
+     * @return string
+     */
+    public static function getCodeAnnotation($code = -1)
+    {
+        //获取配置code项，一次性提取到内存中，虽然占内存，但是提升了效率，第一次会慢一些
+        static $codes = array();
+        if (empty($codes)) {
+            $reflect = new \ReflectionClass('\Config\Code');
+            $codesArr = $reflect->getStaticProperties();
+            foreach ($codesArr as $k => $v) {
+                //获取此code注释
+                $codeInfo = $v;
+                $proComment = $reflect->getProperty($k)->getDocComment();
+                $proComment = preg_replace('/\s/','',$proComment);
+                $proComment = substr($proComment,4,strpos($proComment,'*@var')-4);
+                $codeInfo['comment'] = $proComment;
+                $codes[$v['code']] = $codeInfo;
+            }
+        }
+        //获取此code注释key名称
+        if (empty($codes[$code])) {
+            throw new \Exception("code:{$code},未找到");
+        }
+        $comment = $codes[$code]['comment'];
+        return $comment;
+    }
 }

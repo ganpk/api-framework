@@ -22,6 +22,6 @@ class Demo extends BaseApi
 //        $memberModel = \Libs\AppFactory::model('Member');
 //        $result = $memberModel::find(1)->toArray();
         $result = \Core\Libs\AppFactory::module('Demo')->test();
-        return $result;
+        return $this->output(\Config\Code::$SUCCESS, $result);
     }
 }

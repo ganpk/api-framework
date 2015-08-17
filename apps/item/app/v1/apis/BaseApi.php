@@ -46,23 +46,37 @@ class BaseApi
         }
         return self::$instance;
     }
-    
+
     /**
      * 获取某一参数
-     * @param string $key 参数名
-     * @param mixed $dafult 默认值
+     * @param $key 参数名
+     * @param null $dafult 默认值
+     * @return null
+     * @throws \Exceptions\ParamException
      */
-    public function getParam($key, $dafult = null)
+    public function getParam($key, $default = null)
     {
     	if (!isset($this->params[$key])) {
     		$argsCount = func_num_args();
     		if ($argsCount == 1) {
     			throw new \Exceptions\ParamException(\Config\ParamsRule::$rules[$key]['desc']."参数{$key}缺失");
     		}else{
-    			return $dafult;
+    			return $default;
     		}
     	} else {
     		return $this->params[$key];
     	}
+    }
+
+    /**
+     * 统一响应
+     * @param array $codeArr code数据
+     * @param array $result result数据
+     * @param array $result extData数据
+     * @return array
+     */
+    public function output($codeArr, $result = array(), $extData = array())
+    {
+        return array('codeData' => $codeArr, 'result' => $result, 'extData' => $extData);
     }
 }

@@ -18,7 +18,6 @@ class DbManager
     {
         $capsule = new Capsule();
         $projectName = ucfirst(PROJECT_NAME);
-        //TODO:加载配置文件，这种方式是非常不是好的，后面优化掉
         $configClass = "\\Apps\\{$projectName}\\Config\\Db";
         $capsule->addConnection($configClass::instance()->mysql);
         $capsule->setAsGlobal();

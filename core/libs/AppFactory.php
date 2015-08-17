@@ -39,7 +39,7 @@ class AppFactory
     }
 
     /**
-     * 获取model对象
+     * 获取model对象,返回的是model类路径字符串
      * @param $className model的类名
      * @return \Illuminate\Database\Eloquent\Model
      */

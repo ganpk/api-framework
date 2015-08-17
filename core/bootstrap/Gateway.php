@@ -94,14 +94,14 @@ class Gateway
         ];
 
         //转换成驼峰风格
-        \Core\Libs\Json::converToHump($resTplData, \Config\HumpMap::$map);
+        \Core\Libs\Utility::converToHump($resTplData, \Config\HumpMap::$map);
 
         //转换数组为对象，主要是统一result和extData下面不直接使用数据
         if (is_array($resTplData['result'])) {
-            $resTplData['result'] = json_decode(json_encode($result));
+            $resTplData['result'] = json_decode(json_encode($resTplData['result']));
         }
-        if (is_array($extData)) {
-            $resTplData['extData'] = json_decode(json_encode($extData));
+        if (is_array( $resTplData['extData'])) {
+            $resTplData['extData'] = json_decode(json_encode( $resTplData['extData']));
         }
 
         //响应给客户端

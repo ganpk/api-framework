@@ -1,25 +1,21 @@
 <?php
 namespace Core\Libs;
 
-/**
- * JSON 相关工具
- * Class Json
- * @package Core\Libs
- */
-class Json
+class Utility
 {
     /**
      * 将数组转换为驼峰风格
      * 它会自动将key为_字符去掉并将之后的字符大写，如果传了map数据，则会在转换后将相应key做映射，如userid=>userId，主要是为了解决有的key不是按_分割的
-     * @param array/string $json
-     * @param array $map 映射项
+     * @param array $arr
+     * @param array $map
+     * @return array
      */
     public static function converToHump(array &$arr, array &$map = array())
     {
-        print_r($arr);
         if (empty($arr)) {
             return array();
         }
+        //循环处理key
         $newArr = array();
         foreach ($arr as $k => $v) {
             $splitArr = explode('_', $k);

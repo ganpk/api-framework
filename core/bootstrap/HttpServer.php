@@ -34,7 +34,7 @@ class HttpServer
     
     /**
      * 获取实例化对象
-     * @return \Bootstrap\HttpServer
+     * @return \Core\Bootstrap\HttpServer
      */
     public static function instance()
     {

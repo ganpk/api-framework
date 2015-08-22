@@ -3,7 +3,8 @@
         "respect/validation": "0.9.3",
         "league/url": "3.3.5",
         "illuminate/database": "5.0.33",
-        "monolog/monolog":"1.16.0"
+        "monolog/monolog":"1.16.0",
+        "phpunit/phpunit":"4.8.4"
     },
     "repositories": [
         {"type": "composer", "url": "http://packagist.phpcomposer.com"},

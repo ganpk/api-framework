@@ -5,3 +5,5 @@
 //TODO:更优好的事件侦听   优先级：低
 
 //TODO:请求头加上客户端版本号，如APP的版本号
+
+//支持HTTP SERVER 和  TCP SERVER

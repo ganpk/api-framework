@@ -2,6 +2,7 @@
 namespace Apps\Item\App\V2\Apis;
 
 use Libs;
+
 /**
  * API
  * Class Demo
@@ -13,7 +14,7 @@ class Demo extends \Apps\Item\App\V1\Apis\Demo
      * 测试方法
      * @param $params
      */
-    public function test2($params)
+    public function test2()
     {
         //获取需要的参数
         //$productId = \Libs\CheckParam::instance($params)->isRequire(true)->check('productId');
@@ -21,6 +22,6 @@ class Demo extends \Apps\Item\App\V1\Apis\Demo
 
         //获取model数据
         $result = array('hello world v2 test mehtod');
-        return $result;
+        return $this->output(\Config\Code::$SUCCESS, $result);
     }
 }

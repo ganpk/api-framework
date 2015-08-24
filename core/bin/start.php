@@ -15,8 +15,10 @@ ini_set('display_errors','On');
 //获取参数
 $project = empty($argv[1]) ? '' : trim($argv[1]);
 
-//获取存在的模块名
-$appsPath = '../../apps';
+$binDir =  __DIR__;
+
+//获取存在的模块
+$appsPath = $binDir.'/../../apps';
 $projects = array();
 $fd = opendir($appsPath);
 while (($fname = readdir($fd))) {

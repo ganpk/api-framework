@@ -1,0 +1,7 @@
+[2015-08-24 08:10:37] logs.ERROR: class Products not found [] []
+[2015-08-24 08:11:15] logs.ERROR: SQLSTATE[HY000] [2003] Can't connect to MySQL server on '127.0.0.1' (111) [] []
+[2015-08-24 08:12:35] logs.ERROR: 响应数据时没有codeData键 [] []
+[2015-08-24 08:12:37] logs.ERROR: SQLSTATE[HY000] [2003] Can't connect to MySQL server on '127.0.0.1' (111) [] []
+[2015-08-24 08:15:29] logs.ERROR: SQLSTATE[HY000] [2003] Can't connect to MySQL server on '127.0.0.1' (111) [] []
+[2015-08-24 08:15:42] logs.ERROR: SQLSTATE[HY000] [2003] Can't connect to MySQL server on '127.0.0.1' (111) [] []
+[2015-08-24 08:16:21] logs.ERROR: 响应数据时没有codeData键 [] []

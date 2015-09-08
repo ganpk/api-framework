@@ -56,16 +56,16 @@ class BaseApi
      */
     public function getParam($key, $default = null)
     {
-    	if (!isset($this->params[$key])) {
-    		$argsCount = func_num_args();
-    		if ($argsCount == 1) {
-    			throw new \Exceptions\ParamException(\Config\ParamsRule::$rules[$key]['desc']."参数{$key}缺失");
-    		}else{
-    			return $default;
-    		}
-    	} else {
-    		return $this->params[$key];
-    	}
+        if (!isset($this->params[$key])) {
+            $argsCount = func_num_args();
+            if ($argsCount == 1) {
+                throw new \Exceptions\ParamException(\Config\ParamsRule::$rules[$key]['desc'] . "参数{$key}缺失");
+            } else {
+                return $default;
+            }
+        } else {
+            return $this->params[$key];
+        }
     }
 
     /**

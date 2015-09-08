@@ -12,11 +12,11 @@ use Respect\Validation\Validator;
 class Gateway
 {
     /**
-     * Http实例 
+     * Http实例
      * @var Http
      */
     private $http = null;
-    
+
     /**
      * 构造方法
      * @param Http $http
@@ -26,7 +26,7 @@ class Gateway
         //保存http实例
         $this->http = $http;
         //检查签名
-        if (RUN_MOD !='produce' && !\Config\Secrety::$isCheckSignatureOnTest) {
+        if (RUN_MOD != 'produce' && !\Config\Secrety::$isCheckSignatureOnTest) {
             //非线上模式，且配置了非线上模式不检查签名
         } else {
             //检查数据包的签名是否正确
@@ -42,11 +42,11 @@ class Gateway
                 //认证未通过
                 $this->output(\Config\Code::$AUTH_MEMBER_FAIL);
                 return;
-            }  
+            }
         }
-        
+
         //分发任务
-        try{
+        try {
             $this->dispatcher();
         } catch (\PDOException $e) {
             //操作数据库出错
@@ -63,20 +63,20 @@ class Gateway
             $this->output(\Config\Code::$CATCH_EXCEPTION);
         }
     }
-    
+
     /**
      * 统一对外输出方法
-     * @param array  $codeData 定义的Code项
+     * @param array $codeData 定义的Code项
      * @param array $result 为了统一结构且方便调用者，result必须是对象，不能直接用数组（包含关系数据），
-     * @param array $extData  扩展数据，必须是对象
+     * @param array $extData 扩展数据，必须是对象
      */
     public function output($codeData = array(), $result = array(), $extData = array())
     {
         //准备参数
         $codeData = empty($codeData) ? array() : $codeData;
-        $result   = empty($result)   ? array() : $result;
-        $extData  = empty($extData)  ? array() : $extData;
-        
+        $result = empty($result) ? array() : $result;
+        $extData = empty($extData) ? array() : $extData;
+
         //检查参数是否合法
         if (!Validator::int()->validate($codeData['code'])) {
             //code参数不合法，写入日志
@@ -92,10 +92,10 @@ class Gateway
         //统一响应的数据结构
         $resTplData = [
             'code' => $codeData['code'],
-            'msg'  => $codeData['msg'],
+            'msg' => $codeData['msg'],
             'time' => time(),
             'extData' => $extData,
-            'result'  => $result
+            'result' => $result
         ];
 
         //转换成驼峰风格
@@ -105,14 +105,14 @@ class Gateway
         if (is_array($resTplData['result'])) {
             $resTplData['result'] = json_decode(json_encode($resTplData['result']));
         }
-        if (is_array( $resTplData['extData'])) {
-            $resTplData['extData'] = json_decode(json_encode( $resTplData['extData']));
+        if (is_array($resTplData['extData'])) {
+            $resTplData['extData'] = json_decode(json_encode($resTplData['extData']));
         }
 
         //响应给客户端
         $this->response(json_encode($resTplData));
     }
-    
+
     /**
      * 响应
      * @param string $content 响应内容
@@ -124,7 +124,7 @@ class Gateway
         $this->http->response->status = $statusCode;
         $this->http->response->end($content);
     }
-    
+
     /**
      * 分发任务
      */
@@ -137,7 +137,7 @@ class Gateway
 
         //解析uri
         $uri = strtolower($this->http->request->server['request_uri']);
-        $uriParse = explode('/', trim($uri,'/'));
+        $uriParse = explode('/', trim($uri, '/'));
         if (count($uriParse) != 3) {
             //uri不符合格式
             $this->output(\Config\Code::$ELLEGAL_API_URL);
@@ -146,8 +146,8 @@ class Gateway
 
         //分发给相应处理者的相关参数
         $versionName = $uriParse[0];
-        $className   = ucfirst($uriParse[1]);
-        $methodName  = $uriParse[2];
+        $className = ucfirst($uriParse[1]);
+        $methodName = $uriParse[2];
 
         //检查并过滤参数
         $errorInfo = $this->getCheckParamsErrorInfo();
@@ -164,15 +164,16 @@ class Gateway
         if (empty($result['codeData'])) {
             throw new \Exception('响应数据时没有codeData键');
         }
-        $result['result']  = empty($result['result']) ? array() : $result['result'];
+        $result['result'] = empty($result['result']) ? array() : $result['result'];
         $result['extData'] = empty($result['extData']) ? array() : $result['extData'];
         $this->output($result['codeData'], $result['result'], $result['extData']);
     }
-    
+
     /**
      * 安全过滤uri参数
      */
-    private function secretyFilterUri() {
+    private function secretyFilterUri()
+    {
         $uri = $this->http->request->server['request_uri'];
         if (empty($uri)) {
             return;
@@ -195,12 +196,12 @@ class Gateway
                     //规则中没有定义，则踢出参数中
                     unset($this->http->request->post[$k]);
                     continue;
-                } else  {
+                } else {
                     //在规则中，则验证是否符合规则
-                    if (!$this->validatorParam($v,\Config\ParamsRule::$rules[$k])) {
+                    if (!$this->validatorParam($v, \Config\ParamsRule::$rules[$k])) {
                         $codeArr = \Config\Code::$ELLEGAL_PARAMS;
                         $codeArr['msg'] = \Core\Libs\Utility::getCodeAnnotation(\Config\Code::$ELLEGAL_PARAMS['code']);
-                        $codeArr['msg'] = sprintf($codeArr['msg'], \Config\ParamsRule::$rules[$k]['desc'].'错误');
+                        $codeArr['msg'] = sprintf($codeArr['msg'], \Config\ParamsRule::$rules[$k]['desc'] . '错误');
                         return $codeArr;
                     }
                 }
@@ -208,7 +209,7 @@ class Gateway
         }
         return array();
     }
-    
+
     /**
      * 根据规则验证参数是否符合规则
      * @param mixed $value 验证参数值
@@ -216,7 +217,7 @@ class Gateway
      * @return boolean
      * TODO:此方法有点low,后面再优化吧
      */
-    private function validatorParam($value,$rule)
+    private function validatorParam($value, $rule)
     {
         foreach ($rule as $k => $v) {
             switch ($k) {
@@ -251,5 +252,5 @@ class Gateway
         }
         return true;
     }
-    
+
 }

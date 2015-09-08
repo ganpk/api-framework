@@ -29,11 +29,11 @@ abstract class AppBaseConfig
             $class = get_called_class();
             self::$instance = new $class();
             //获取当前环境配置文件路径
-            $class = ltrim($class,'\\');
+            $class = ltrim($class, '\\');
             $classPathArr = explode('\\', $class);
-            $classPathArr[4] = $classPathArr[3].'.php';
+            $classPathArr[4] = $classPathArr[3] . '.php';
             $classPathArr[3] = RUN_MOD;
-            $filePath = ROOT_PATH.'/'.strtolower(implode('/',$classPathArr));
+            $filePath = ROOT_PATH . '/' . strtolower(implode('/', $classPathArr));
             if (file_exists($filePath)) {
                 //存在指定环境配置文件
                 $configs = require $filePath;

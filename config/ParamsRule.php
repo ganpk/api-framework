@@ -8,11 +8,11 @@ namespace Config;
 class ParamsRule
 {
     public static $rules = array(
-        
-        'productId' => array('desc' => '商品ID','type' => 'int', 'min'=>1),
-        
-        'memberId'  => array('desc' => '用户ID','type' => 'int', 'min'=>1),
-        
-        
+
+        'productId' => array('desc' => '商品ID', 'type' => 'int', 'min' => 1),
+
+        'memberId' => array('desc' => '用户ID', 'type' => 'int', 'min' => 1),
+
+
     );
 }

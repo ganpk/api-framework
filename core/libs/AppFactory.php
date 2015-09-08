@@ -19,7 +19,7 @@ class AppFactory
      * @throws \Exception
      * @return object
      */
-    public static function api($className,$version = null)
+    public static function api($className, $version = null)
     {
         if ($version == null) {
             $version = self::getVersion();
@@ -61,7 +61,7 @@ class AppFactory
         }
         return self::getInstance('config', $className, $version);
     }
-    
+
     /**
      * 生产实例
      * @param string $appName apis/modules/models
@@ -82,12 +82,12 @@ class AppFactory
         $versionFirstUpper = ucfirst($version);
         $projectName = PROJECT_NAME;
         $projectNameFirstUpper = ucfirst($projectName);
-        $classFilePath = ROOT_PATH."/apps/{$projectName}/app/{$version}/{$appName}/{$classNameLower}.php";
+        $classFilePath = ROOT_PATH . "/apps/{$projectName}/app/{$version}/{$appName}/{$classNameLower}.php";
         $classNameSpace = "\\Apps\\{$projectNameFirstUpper}\\App\\{$versionFirstUpper}\\{$appName}\\{$className}";
         if (!file_exists($classFilePath)) {
             //类文件不存在，则判断是否配置了继承版本
             $versionClass = "\\Apps\\{$projectNameFirstUpper}\\App\\{$versionFirstUpper}\\Version";
-            $extendsVersion  = $versionClass::$extends;
+            $extendsVersion = $versionClass::$extends;
             if ($extendsVersion != null) {
                 //配置了继承，递归向上找
                 return self::getInstance($appName, $className, $extendsVersion);
@@ -103,7 +103,7 @@ class AppFactory
         }
         return $classNameSpace::instance();
     }
-    
+
     /**
      * 获取当前调用者版本号
      */
@@ -117,8 +117,8 @@ class AppFactory
         }
         //获取版本号
         $callerFile = strtolower($debugInfo[1]['file']);
-        $callerFile = str_replace(ROOT_PATH.'/apps/'.PROJECT_NAME.'/app/', '', $callerFile);
-        $version = substr($callerFile,0,strpos($callerFile, '/'));
+        $callerFile = str_replace(ROOT_PATH . '/apps/' . PROJECT_NAME . '/app/', '', $callerFile);
+        $version = substr($callerFile, 0, strpos($callerFile, '/'));
         return $version;
     }
 }

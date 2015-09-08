@@ -59,8 +59,8 @@ class Utility
                 //获取此code注释
                 $codeInfo = $v;
                 $proComment = $reflect->getProperty($k)->getDocComment();
-                $proComment = preg_replace('/\s/','',$proComment);
-                $proComment = substr($proComment,4,strpos($proComment,'*@var')-4);
+                $proComment = preg_replace('/\s/', '', $proComment);
+                $proComment = substr($proComment, 4, strpos($proComment, '*@var') - 4);
                 $codeInfo['comment'] = $proComment;
                 $codes[$v['code']] = $codeInfo;
             }

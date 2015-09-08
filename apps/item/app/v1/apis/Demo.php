@@ -2,6 +2,7 @@
 namespace Apps\Item\App\V1\Apis;
 
 use Libs;
+
 /**
  * API
  * Class Demo
@@ -16,7 +17,7 @@ class Demo extends BaseApi
     public function test()
     {
         //获取需要的参数
-       $productId = $this->getParam('productId',0);
+        $productId = $this->getParam('productId', 0);
 
         //获取model数据
         $memberModel = \Core\Libs\AppFactory::model('Member');

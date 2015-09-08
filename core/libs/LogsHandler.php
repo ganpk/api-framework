@@ -34,15 +34,16 @@ class LogsHandler extends AbstractProcessingHandler
      * 实现写方法
      * @param array $record
      */
-    protected function write(array $record) {
+    protected function write(array $record)
+    {
         //构建日志路径，按日期分目录
-        $filePathDir = ROOT_PATH.'/storage/logs/'.date('Y-m-d');
+        $filePathDir = ROOT_PATH . '/storage/logs/' . date('Y-m-d');
         if (!file_exists($filePathDir)) {
-            @mkdir($filePathDir,0777,true);
+            @mkdir($filePathDir, 0777, true);
         }
-        $filePath = $filePathDir.'/'.$this->logFile;
+        $filePath = $filePathDir . '/' . $this->logFile;
         //异步写文件
-        swoole_async_write($filePath, (string) $record['formatted']);
+        swoole_async_write($filePath, (string)$record['formatted']);
         //TODO:定制错误级别自动发送邮件
     }
 }

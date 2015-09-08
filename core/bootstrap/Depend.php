@@ -15,11 +15,11 @@ class Depend
     public static function inject()
     {
         //注入monolog日志对象
-        \Core\Libs\Ioc::bind('logs',function(){
+        \Core\Libs\Ioc::bind('logs', function () {
             static $logObj = null;
             if ($logObj == null) {
                 $logObj = new Logger('logs');
-                $logFile = PROJECT_NAME.'.log';
+                $logFile = PROJECT_NAME . '.log';
                 $logObj->pushHandler(new LogsHandler($logFile, Logger::WARNING));
             }
             return $logObj;

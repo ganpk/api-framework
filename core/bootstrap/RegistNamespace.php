@@ -11,31 +11,31 @@ class RegistNameSpace
      * @var RegistNameSpace
      */
     private static $instance = null;
-    
+
     /**
      * 是否已经处理过了
      * @var boolean
      */
     private static $isHandled = false;
-    
+
     /**
      * 自动加载类的loader对象
      * @var ClassLoader
      */
     private $classLoader = null;
-    
+
     /**
      * 要加入命名空间的根目录
      * @var string
      */
     private $rootPath = '';
-    
+
     /**
      * 忽略的目录
      * @var array
      */
     private $ignore = array();
-    
+
     /**
      * 单例模式禁止外部实例化
      * @param array $ignore
@@ -48,18 +48,18 @@ class RegistNameSpace
         $this->ignore = $ignore;
         $this->classLoader = $classLoader;
     }
-    
+
     /**
      * 单例模式禁止外部克隆
      */
-    final protected  function __clone()
+    final protected function __clone()
     {
     }
-    
+
     /**
      * 获取实例化对象
      */
-    public static function instance($rootPath = '',$ignore = array(), $classLoader = null)
+    public static function instance($rootPath = '', $ignore = array(), $classLoader = null)
     {
         if (!is_string($rootPath) || $rootPath == '') {
             throw new \Exception('rootPath参数只能是非常空字符串');
@@ -75,17 +75,17 @@ class RegistNameSpace
         }
         return self::$instance;
     }
-    
+
     /**
      * 销毁实例化对象
      */
     public static function desInstance()
     {
-        if (self::$instance != null){
-            self::$instance =  null;
+        if (self::$instance != null) {
+            self::$instance = null;
         }
     }
-    
+
     /**
      * 开始注册
      * @return boolean
@@ -101,7 +101,7 @@ class RegistNameSpace
             self::desInstance();
         }
     }
-    
+
     /**
      * 扫描目录下的目录并增加到class map中
      */
@@ -111,16 +111,16 @@ class RegistNameSpace
             $dh = opendir($dir);
             if ($dh) {
                 while (($file = readdir($dh)) !== false) {
-                    $path = $dir.'/'.$file;
-                    if (is_dir($path) && strpos($file, '.') !==0 ){
-                        $namespace = ucfirst($file).'\\';
-                        $this->classLoader->setPsr4($namespace,$path);
+                    $path = $dir . '/' . $file;
+                    if (is_dir($path) && strpos($file, '.') !== 0) {
+                        $namespace = ucfirst($file) . '\\';
+                        $this->classLoader->setPsr4($namespace, $path);
                     }
                 }
                 closedir($dh);
                 self::$isHandled = true;
             } else {
-                throw new \Core\Exceptions\RegistNamespaceException('不能找开目录'.$dir);
+                throw new \Core\Exceptions\RegistNamespaceException('不能找开目录' . $dir);
             }
         }
     }

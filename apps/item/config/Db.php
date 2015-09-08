@@ -14,18 +14,18 @@ class Db extends \Core\Libs\AppBaseConfig
      * @var array
      */
     public $mysql = [
-        'driver'    => 'mysql',
+        'driver' => 'mysql',
         'read' => [
             'host' => '127.0.0.1',
         ],
         'write' => [
             'host' => '127.0.0.1'
         ],
-        'database'  => 'test',
-        'username'  => 'root',
-        'password'  => '123456',
-        'charset'   => 'utf8',
+        'database' => 'test',
+        'username' => 'root',
+        'password' => '123456',
+        'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
-        'prefix'    => 'test_',
+        'prefix' => 'test_',
     ];
 }

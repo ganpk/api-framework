@@ -3,6 +3,7 @@ namespace Core\Libs;
 
 use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
+
 /**
  * db管理类
  * Class Db

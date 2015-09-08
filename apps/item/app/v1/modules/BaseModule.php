@@ -46,7 +46,7 @@ class BaseModule
         }
         return self::$instance;
     }
-    
+
     /**
      * 获取某一参数
      * @param string $key 参数名
@@ -54,15 +54,15 @@ class BaseModule
      */
     public function getParam($key, $dafult = null)
     {
-    	if (!isset($this->params[$key])) {
-    		$argsCount = func_num_args();
-    		if ($argsCount == 1) {
-    			throw new \Exceptions\ParamException(\Config\ParamsRule::$rules[$key]['desc']."参数{$key}缺失");
-    		}else{
-    			return $dafult;
-    		}
-    	} else {
-    		return $this->params[$key];
-    	}
+        if (!isset($this->params[$key])) {
+            $argsCount = func_num_args();
+            if ($argsCount == 1) {
+                throw new \Exceptions\ParamException(\Config\ParamsRule::$rules[$key]['desc'] . "参数{$key}缺失");
+            } else {
+                return $dafult;
+            }
+        } else {
+            return $this->params[$key];
+        }
     }
 }

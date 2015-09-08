@@ -6,7 +6,7 @@ use Respect\Validation\Validator;
 /**
  * 认证类
  */
-class Auth 
+class Auth
 {
     /**
      * 获取用户签名
@@ -16,11 +16,11 @@ class Auth
     public static function getMemberSignature($memberId)
     {
         if (Validator::int()->min(0)) {
-            return substr(md5($memberId.\Config\Secrety::$signatureMemberToken),8,16);
+            return substr(md5($memberId . \Config\Secrety::$signatureMemberToken), 8, 16);
         }
         return '';
-    }    
-    
+    }
+
     /**
      * 用户签名是否正确
      * @param number $memberId
@@ -35,7 +35,7 @@ class Auth
             return false;
         }
     }
-    
+
     /**
      * 数据包签名是否正确
      * @param string $uri server中的uri参数
@@ -51,14 +51,14 @@ class Auth
         if (!empty($post) && is_array($post)) {
             ksort($post);
             $post = array_reverse($post);
-            foreach($post as $k => $v){
-                if($gather !=  ""){
+            foreach ($post as $k => $v) {
+                if ($gather != "") {
                     $gather .= '&';
                 }
                 $gather .= "{$k}={$v}";
             }
         }
-        if ($signature == md5(\Config\Secrety::$signaturePackToken.$uri.$gather)) {
+        if ($signature == md5(\Config\Secrety::$signaturePackToken . $uri . $gather)) {
             return true;
         }
         return false;

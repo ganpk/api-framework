@@ -11,13 +11,13 @@ class Secrety
      * @var boolean true表示检查，反之亦然
      */
     public static $isCheckSignatureOnTest = false;
-    
+
     /**
      * 签名数据包的token
      * @var string
      */
     public static $signaturePackToken = '123456';
-    
+
     /**
      * 签名用户的token
      * @var string

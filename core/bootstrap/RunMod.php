@@ -13,7 +13,7 @@ class RunMod
     public static function init()
     {
         //引入配置文件，此时
-        $envConfig = require ROOT_PATH.'/config/Env.php';
+        $envConfig = require ROOT_PATH . '/config/Env.php';
         $hostname = gethostname();
         $runMod = '';
         foreach ($envConfig as $k => $v) {

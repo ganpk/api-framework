@@ -10,19 +10,19 @@
  */
 
 error_reporting(E_ALL);
-ini_set('display_errors','On');
+ini_set('display_errors', 'On');
 
 //获取参数
 $project = empty($argv[1]) ? '' : trim($argv[1]);
 
-$binDir =  __DIR__;
+$binDir = __DIR__;
 
 //获取存在的模块
-$appsPath = $binDir.'/../../apps';
+$appsPath = $binDir . '/../../apps';
 $projects = array();
 $fd = opendir($appsPath);
 while (($fname = readdir($fd))) {
-    if ($fname == '.' || $fname == '..' || !is_dir($appsPath."/{$fname}")) {
+    if ($fname == '.' || $fname == '..' || !is_dir($appsPath . "/{$fname}")) {
         continue;
     }
     $projects[] = $fname;
@@ -34,14 +34,14 @@ if (!in_array($project, $projects)) {
 }
 
 //定义根目录路径
-define('ROOT_PATH', substr(__DIR__,0,-9));
+define('ROOT_PATH', substr(__DIR__, 0, -9));
 
 //定义项目名称
 define('PROJECT_NAME', $project);
 
 //定义项目路径
-define('PROJECT_PATH', ROOT_PATH.'/apps/'.$project);
+define('PROJECT_PATH', ROOT_PATH . '/apps/' . $project);
 
 //启动HTTP SERVER服务
-require ROOT_PATH.'/core/bootstrap/HttpServer.php';
+require ROOT_PATH . '/core/bootstrap/HttpServer.php';
 \Core\Bootstrap\HttpServer::instance()->start();

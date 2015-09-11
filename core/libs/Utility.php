@@ -46,7 +46,8 @@ class Utility
     /**
      * 获取某code的注释
      * @param int $code
-     * @return string
+     * @return mixed
+     * @throws \Exception
      */
     public static function getCodeAnnotation($code = -1)
     {

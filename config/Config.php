@@ -12,4 +12,12 @@ class Config
      * @var bool
      */
     public static $isOpenOriginalPostInput = false;
+
+    /**
+     * 优先从header某key中获取真实IP,根据实际情况来，如X-Real-IP，如果没有取到则会取server中的remote_addr
+     * 为空表示不从header中拿，直接取server中的remote_addr
+     * @var string
+     */
+    public static $realRemoteAddrHeaderKey = 'X-Real-IP';
+
 }

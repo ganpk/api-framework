@@ -12,55 +12,54 @@ use Respect\Validation\Validator;
 class Gateway
 {
     /**
-     * Http实例
-     * @var Http
+     * 构造方法
+     * 禁止实例化
      */
-    private $http = null;
+    private function __construct()
+    {}
 
     /**
      * 构造方法
      * @param Http $http
      */
-    public function __construct(\Core\Bootstrap\Http $http)
+    public static function handler()
     {
-        //保存http实例
-        $this->http = $http;
         //检查签名
         if (RUN_MOD != 'produce' && !\Config\Secrety::$isCheckSignatureOnTest) {
             //非线上模式，且配置了非线上模式不检查签名
         } else {
             //检查数据包的签名是否正确
-            $signature = empty($this->http->dataSignature) ? '' : $this->http->dataSignature;
+            $signature = empty(Http::$dataSignature) ? '' : Http::$dataSignature;
             $signature = Validator::string()->length(1)->validate($signature) ? $signature : '';
-            if ($signature == '' || !\Core\Bootstrap\Auth::isRightPackDataSignature($this->http->request->server['request_uri'], $this->http->request->post, $signature)) {
+            if ($signature == '' || !\Core\Bootstrap\Auth::isRightPackDataSignature(Http::$request->server['request_uri'], Http::$request->post, $signature)) {
                 //认证未通过
-                $this->output(\Config\Code::$AUTH_PACK_DATA_FAIL);
+                self::output(\Config\Code::$AUTH_PACK_DATA_FAIL);
                 return;
             }
             //检查用户签名是否正确
-            if (!\Core\Bootstrap\Auth::isRightMemberSignature($this->http->memberId, $this->http->memberSignature)) {
+            if (!\Core\Bootstrap\Auth::isRightMemberSignature(Http::$memberId, Http::$memberSignature)) {
                 //认证未通过
-                $this->output(\Config\Code::$AUTH_MEMBER_FAIL);
+                self::output(\Config\Code::$AUTH_MEMBER_FAIL);
                 return;
             }
         }
 
         //分发任务
         try {
-            $this->dispatcher();
+            self::dispatcher();
         } catch (\PDOException $e) {
             //操作数据库出错
             \Core\Libs\Ioc::make('logs')->addError($e->getMessage());
-            $this->output(\Config\Code::$CATCH_EXCEPTION);
+            self::output(\Config\Code::$CATCH_EXCEPTION);
         } catch (\Exceptions\ParamException $e) {
             //参数出错
             $codeInfo = \Config\Code::$ELLEGAL_PARAMS;
             $codeInfo['msg'] = sprintf($codeInfo['msg'], $e->getMessage());
-            $this->output($codeInfo);
+            self::output($codeInfo);
         } catch (\Exception $e) {
             //系统异常
             \Core\Libs\Ioc::make('logs')->addError($e->getMessage());
-            $this->output(\Config\Code::$CATCH_EXCEPTION);
+            self::output(\Config\Code::$CATCH_EXCEPTION);
         }
     }
 
@@ -70,7 +69,7 @@ class Gateway
      * @param array $result 为了统一结构且方便调用者，result必须是对象，不能直接用数组（包含关系数据），
      * @param array $extData 扩展数据，必须是对象
      */
-    public function output($codeData = array(), $result = array(), $extData = array())
+    private static function output($codeData = array(), $result = array(), $extData = array())
     {
         //准备参数
         $codeData = empty($codeData) ? array() : $codeData;
@@ -110,7 +109,7 @@ class Gateway
         }
 
         //响应给客户端
-        $this->response(json_encode($resTplData));
+        self::response(json_encode($resTplData));
     }
 
     /**
@@ -118,29 +117,29 @@ class Gateway
      * @param string $content 响应内容
      * @param int $statusCode 响应状态码
      */
-    private function response($content = '', $statusCode = 200)
+    private static function response($content = '', $statusCode = 200)
     {
         //统一将json数据过滤为驼峰风格
-        $this->http->response->status = $statusCode;
-        $this->http->response->end($content);
+        Http::$response->status = $statusCode;
+        Http::$response->end($content);
     }
 
     /**
      * 分发任务
      */
-    private function dispatcher()
+    private static function dispatcher()
     {
         //uri格式为/v2/products/test
 
         //安全过滤uri参数
-        $this->secretyFilterUri();
+        self::secretyFilterUri();
 
         //解析uri
-        $uri = strtolower($this->http->request->server['request_uri']);
+        $uri = strtolower(Http::$request->server['request_uri']);
         $uriParse = explode('/', trim($uri, '/'));
         if (count($uriParse) != 3) {
             //uri不符合格式
-            $this->output(\Config\Code::$ELLEGAL_API_URL);
+            self::output(\Config\Code::$ELLEGAL_API_URL);
             return;
         }
 
@@ -150,15 +149,15 @@ class Gateway
         $methodName = $uriParse[2];
 
         //检查并过滤参数
-        $errorInfo = $this->getCheckParamsErrorInfo();
+        $errorInfo = self::getCheckParamsErrorInfo();
         if (!empty($errorInfo)) {
-            $this->output($errorInfo);
+            self::output($errorInfo);
             return;
         }
 
         //调用相应api，响应数据
         $api = \Core\Libs\AppFactory::api($className, $versionName);
-        $api->params = $this->http->request->post;
+        $api->params = Http::$request->post;
         $result = $api->{$methodName}();
         //响应数据
         if (empty($result['codeData'])) {
@@ -166,39 +165,39 @@ class Gateway
         }
         $result['result'] = empty($result['result']) ? array() : $result['result'];
         $result['extData'] = empty($result['extData']) ? array() : $result['extData'];
-        $this->output($result['codeData'], $result['result'], $result['extData']);
+        self::output($result['codeData'], $result['result'], $result['extData']);
     }
 
     /**
      * 安全过滤uri参数
      */
-    private function secretyFilterUri()
+    private static function secretyFilterUri()
     {
-        $uri = $this->http->request->server['request_uri'];
+        $uri = Http::$request->server['request_uri'];
         if (empty($uri)) {
             return;
         }
         //禁止出现.号，以防跨文件执行的安全问题
         $uri = str_replace('.', '', $uri);
-        $this->http->request->server['request_uri'] = $uri;
+        Http::$request->server['request_uri'] = $uri;
     }
 
     /**
      * 获取检查参数的错误信息
      * @return array 返回错误信息code数组，如果为空表示参数正确
      */
-    private function getCheckParamsErrorInfo()
+    private static function getCheckParamsErrorInfo()
     {
-        $params = $this->http->request->post;
+        $params = Http::$request->post;
         if (count($params) > 0) {
             foreach ($params as $k => $v) {
                 if (empty(\Config\ParamsRule::$rules[$k])) {
                     //规则中没有定义，则踢出参数中
-                    unset($this->http->request->post[$k]);
+                    unset(Http::$request->post[$k]);
                     continue;
                 } else {
                     //在规则中，则验证是否符合规则
-                    if (!$this->validatorParam($v, \Config\ParamsRule::$rules[$k])) {
+                    if (!self::validatorParam($v, \Config\ParamsRule::$rules[$k])) {
                         $codeArr = \Config\Code::$ELLEGAL_PARAMS;
                         $codeArr['msg'] = \Core\Libs\Utility::getCodeAnnotation(\Config\Code::$ELLEGAL_PARAMS['code']);
                         $codeArr['msg'] = sprintf($codeArr['msg'], \Config\ParamsRule::$rules[$k]['desc'] . '错误');
@@ -217,7 +216,7 @@ class Gateway
      * @return boolean
      * TODO:此方法有点low,后面再优化吧
      */
-    private function validatorParam($value, $rule)
+    private static function validatorParam($value, $rule)
     {
         foreach ($rule as $k => $v) {
             switch ($k) {

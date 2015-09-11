@@ -33,7 +33,7 @@ class Http
      * 调用者要高此信息加入到header中
      * @var string
      */
-    public $clientIdCart = '';
+    public $clientIdCard = '';
 
     /**
      * 当前请求者的用户id
@@ -71,6 +71,24 @@ class Http
     public $clientPlatform = '';
 
     /**
+     * APP版本号
+     * @var string
+     */
+    public $clientAppVersion = '';
+
+    /**
+     * 系统版本号，如当系统是IOS时,8.4.2就是当前IOS的版本号
+     * @var string
+     */
+    public $clientSystemVersion = '';
+
+    /**
+     * APP设置类型，如4s
+     * @var string
+     */
+    public $clientDeviceModel = '';
+
+    /**
      * HTTP构造方法
      * @param object $request
      * @param object $response
@@ -102,29 +120,45 @@ class Http
 
         //获取header固定项到http属性中
         $header = $this->request->header;
-        if (!empty($header['member-id']) && Validator::int()->min(0)->validate($header['member-id'])) {
+        if (!empty($header['member_id']) && Validator::int()->min(0)->validate($header['member_id'])) {
             //memberId有效
-            $this->memberId = intval($header['memberId']);
+            $this->memberId = intval($header['member_id']);
         }
-        if (!empty($header['member-signature']) && Validator::string()->validate($header['member-signature'])) {
+        if (!empty($header['member_signature']) && Validator::string()->validate($header['member_signature'])) {
             //用户签名有效
-            $this->memberSignature = $header['member-signature'];
+            $this->memberSignature = $header['member_signature'];
         }
-        if (!empty($header['data-signature']) && Validator::string()->validate($header['data-signature'])) {
+        if (!empty($header['data_signature']) && Validator::string()->validate($header['data_signature'])) {
             //数据包签名有效
-            $this->dataSignature = $header['data-signature'];
+            $this->dataSignature = $header['data_signature'];
         }
-        if (!empty($header['client-id-card']) && Validator::string()->validate($header['client-id-card'])) {
+        if (!empty($header['client_id_card']) && Validator::string()->validate($header['client_id_card'])) {
             //客户端唯一身份标识有效
-            $this->clientIdCart = $header['client-id-card'];
+            $this->clientIdCard = $header['client_id_card'];
         }
-        if (!empty($header['client-system']) && Validator::string()->validate($header['client-system'])) {
+        if (!empty($header['client_system']) && Validator::string()->validate($header['client_system'])) {
             //客户端系统标识有效
-            $this->clientSystem = $header['client-system'];
+            $this->clientSystem = $header['client_system'];
         }
-        if (!empty($header['client-platform']) && Validator::string()->validate($header['client-platform'])) {
+        if (!empty($header['client_platform']) && Validator::string()->validate($header['client_platform'])) {
             //客户端平台标识有效
-            $this->clientPlatform = $header['client-platform'];
+            $this->clientPlatform = $header['client_platform'];
+        }
+        if (!empty($header['client_platform']) && Validator::string()->validate($header['client_platform'])) {
+            //客户端平台标识有效
+            $this->clientPlatform = $header['client_platform'];
+        }
+        if (!empty($header['client_app_version']) && Validator::string()->validate($header['client_app_version'])) {
+            //客户端APP版本标识
+            $this->clientAppVersion = $header['client_app_version'];
+        }
+        if (!empty($header['client_device_model']) && Validator::string()->validate($header['client_device_model'])) {
+            //客户端设备类型标识
+            $this->clientDeviceModel = $header['client_device_model'];
+        }
+        if (!empty($header['client_system_version']) && Validator::string()->validate($header['client_system_version'])) {
+            //客户端系统版本标识
+            $this->clientSystemVersion = $header['client_system_version'];
         }
     }
 }

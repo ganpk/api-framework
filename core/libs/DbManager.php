@@ -18,7 +18,7 @@ class DbManager
     public static function connect()
     {
         $capsule = new Capsule();
-        $projectName = ucfirst(PROJECT_NAME);
+        $projectName = ucfirst(APP_NAME);
         $configClass = "\\Apps\\{$projectName}\\Config\\Db";
         $capsule->addConnection($configClass::instance()->mysql);
         $capsule->setAsGlobal();

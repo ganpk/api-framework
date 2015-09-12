@@ -8,40 +8,44 @@
  *      PROJECT_PATH 项目路径
  * 开启服务
  */
-
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
-
 //获取参数
-$project = empty($argv[1]) ? '' : trim($argv[1]);
+$app = empty($argv[1]) ? '' : trim($argv[1]);
 
-$binDir = __DIR__;
+//获取apps配置信息
+{
+    exit(__DIR__);
+    $frameworkePath = rtrim(__DIR__,'');
+    $apps = require __DIR__.'';
+    if ($app == '' || empty($apps[$app])) {
+        exit("启动失败，没有发现{$app}项目");
+    }
+}
 
 //获取存在的模块
-$appsPath = $binDir . '/../../apps';
-$projects = array();
-$fd = opendir($appsPath);
-while (($fname = readdir($fd))) {
-    if ($fname == '.' || $fname == '..' || !is_dir($appsPath . "/{$fname}")) {
-        continue;
-    }
-    $projects[] = $fname;
-}
-
-//检查模块是否存在
-if (!in_array($project, $projects)) {
-    exit("启动失败，没有发现{$project}项目");
-}
-
-//定义根目录路径
-define('ROOT_PATH', substr(__DIR__, 0, -9));
-
-//定义项目名称
-define('PROJECT_NAME', $project);
-
-//定义项目路径
-define('PROJECT_PATH', ROOT_PATH . '/apps/' . $project);
+//$appsPath = $binDir . '/../../apps';
+//$projects = array();
+//$fd = opendir($appsPath);
+//while (($fname = readdir($fd))) {
+//    if ($fname == '.' || $fname == '..' || !is_dir($appsPath . "/{$fname}")) {
+//        continue;
+//    }
+//    $projects[] = $fname;
+//}
+//
+////检查模块是否存在
+//if (!in_array($project, $projects)) {
+//    exit("启动失败，没有发现{$project}项目");
+//}
+//
+////定义根目录路径
+//define('ROOT_PATH', substr(__DIR__, 0, -9));
+//
+////定义项目名称
+//define('PROJECT_NAME', $project);
+//
+////定义项目路径
+//define('PROJECT_PATH', ROOT_PATH . '/apps/' . $project);
 
 //启动HTTP SERVER服务
-require ROOT_PATH . '/core/bootstrap/HttpServer.php';
-\Core\Bootstrap\HttpServer::instance()->start();
+//require ROOT_PATH . '/core/bootstrap/HttpServer.php';
+//\Core\Bootstrap\HttpServer::instance()->start();

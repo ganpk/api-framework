@@ -19,7 +19,7 @@ class Gateway
     {}
 
     /**
-     * 构造方法
+     * 处理请求
      * @param Http $http
      */
     public static function handler()

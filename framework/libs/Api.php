@@ -6,7 +6,7 @@ namespace Framework\Libs;
  * Class Api
  * @package Framework\Libs
  */
-class Api
+abstract class Api
 {
     /**
      * 存放当前实例化类
@@ -56,10 +56,14 @@ class Api
      */
     public function getParam($key, $default = null)
     {
+        static $rules = array();
+        if (empty($rules)) {
+            $rules = require APP_PATH.'/config/ParamsRule.php';
+        }
         if (!isset($this->params[$key])) {
             $argsCount = func_num_args();
             if ($argsCount == 1) {
-                throw new \Framework\Exceptions\ParamException(\App\Config\ParamsRule::$rules[$key]['desc'] . "参数{$key}缺失");
+                throw new \Framework\Exceptions\ParamException($rules[$key]['desc'] . " （{$key}）参数缺失");
             } else {
                 return $default;
             }

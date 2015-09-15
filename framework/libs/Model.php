@@ -8,6 +8,6 @@ use \Illuminate\Database\Eloquent\Model as EqtModel;
  * Class baseModel
  * @package Framework\Libs;
  */
-class Model extends EqtModel
+abstract class Model extends EqtModel
 {
 }

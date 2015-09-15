@@ -1,7 +1,6 @@
 <?php
 namespace Framework\Libs;
 
-use Illuminate\Support\Facades\App;
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
 

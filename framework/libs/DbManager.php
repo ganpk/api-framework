@@ -1,7 +1,6 @@
 <?php
 namespace Framework\Libs;
 
-use Illuminate\Container\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
@@ -12,16 +11,32 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 class DbManager
 {
     /**
+     * DB Manager实例
+     * @var Capsule
+     */
+    static $capsule = null;
+
+    /**
      * 向orm中添加连接信息
      * 此时并未连接，如果有使用时才会连接
      */
     public static function connect()
     {
-        $capsule = new Capsule();
-        $projectName = ucfirst(APP_NAME);
-        $configClass = "\\Apps\\{$projectName}\\Config\\Db";
-        $capsule->addConnection($configClass::instance()->mysql);
-        $capsule->setAsGlobal();
-        $capsule->bootEloquent();
+        self::$capsule = new Capsule();
+        self::$capsule->addConnection(\App\Config\Db::instance()->mysql);
+        self::$capsule->setAsGlobal();
+        self::$capsule->bootEloquent();
+        self::$capsule->getDatabaseManager()->disconnect();
+    }
+
+    /**
+     * 关闭mysql连接
+     */
+    public static function disconnect()
+    {
+        //关闭mysql连接
+        if (!empty(self::$capsule)) {
+            self::$capsule->getDatabaseManager()->disconnect();
+        }
     }
 }

@@ -2,6 +2,7 @@
 namespace Framework\Bootstrap;
 
 use Respect\Validation\Validator;
+use Framework\Libs\Http;
 
 /**
  * 应用网关层
@@ -37,6 +38,10 @@ class Gateway
             //操作数据库出错
             \Framework\Libs\Ioc::make('logs')->addError($e->getMessage());
             self::output(\App\Config\Code::$CATCH_EXCEPTION);
+        } catch(\Framework\Exceptions\NotLoginException $e) {
+            //没有登陆
+            self::output(\App\Config\Code::$NOT_LOGIN);
+            return;
         } catch (\Framework\Exceptions\ParamException $e) {
             //参数出错
             $codeInfo = \App\Config\Code::$ELLEGAL_PARAMS;
@@ -68,7 +73,7 @@ class Gateway
                 return false;
             }
             //检查用户签名是否正确
-            if (!\Framework\Bootstrap\Auth::isRightMemberSignature(Http::$memberId, Http::$memberSignature)) {
+            if (!\Framework\Bootstrap\Auth::isRightMemberSignature(Http::getMemberId(false), Http::$memberSignature)) {
                 //认证未通过
                 self::output(\App\Config\Code::$AUTH_MEMBER_FAIL);
                 return false;
@@ -96,12 +101,6 @@ class Gateway
             $codeData = \App\Config\Code::$CATCH_EXCEPTION;
         }
 
-        //处理msg
-        if (empty($codeData['msg']) || !is_string($codeData['msg'])) {
-            //没有传，则自动拿注释
-            $codeData['msg'] = \Framework\Libs\Utility::getCodeAnnotation($codeData['code']);
-        }
-
         //统一响应的数据结构
         $resTplData = [
             'code' => $codeData['code'],
@@ -124,6 +123,9 @@ class Gateway
 
         //响应给客户端
         self::response(json_encode($resTplData));
+
+        //关闭mysql连接
+        \Framework\Libs\DbManager::disconnect();
     }
 
     /**

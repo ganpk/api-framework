@@ -2,8 +2,6 @@
 namespace Framework\Bootstrap;
 
 use Monolog\Logger;
-use \Core\Libs\LogsHandler;
-
 /**
  * 依赖注入，向IOC容器注入核心依赖的对象
  */
@@ -18,9 +16,10 @@ class Depend
         \Framework\Libs\Ioc::bind('logs', function () {
             static $logObj = null;
             if ($logObj == null) {
-                $logObj = new Logger('logs');
+                $logObj = new \Monolog\Logger('logs');
                 $logFile = 'api.log';
-                $logObj->pushHandler(new LogsHandler($logFile, Logger::WARNING));
+                $log = new \Framework\Libs\LogsHandler($logFile, Logger::WARNING);
+                $logObj->pushHandler($log);
             }
             return $logObj;
         });

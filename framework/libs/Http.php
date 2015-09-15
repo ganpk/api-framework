@@ -1,5 +1,5 @@
 <?php
-namespace Framework\Bootstrap;
+namespace Framework\Libs;
 
 use Respect\Validation\Validator;
 
@@ -49,10 +49,11 @@ class Http
 
     /**
      * 当前请求者的用户id
+     * 只能通过getMemberId来获取
      * 登陆了就将memberId放到header中
      * @var int
      */
-    public static $memberId = 0;
+    private static $memberId = 0;
 
     /**
      * 用户签名
@@ -134,7 +135,8 @@ class Http
      * 禁止实例化
      */
     private function __construct()
-    {}
+    {
+    }
 
     /**
      * 刷新当前数据
@@ -151,7 +153,7 @@ class Http
         self::$get = empty(self::$request->get) ? array() : self::$request->get;
 
         //处理请求的POST数据
-        $serverConf = require APP_PATH.'/config/Server.php';
+        $serverConf = require APP_PATH . '/config/Server.php';
         if (!empty($serverConf['isOpenOriginalPostInput']) && $serverConf['isOpenOriginalPostInput']) {
             //开启了post原始请求
             $postInput = self::$request->rawContent();
@@ -259,5 +261,19 @@ class Http
             $uri = str_replace('.', '', $uri);
         }
         return $uri;
+    }
+
+    /**
+     * 获取当前请求的member_id
+     * @param boolean $isMust 是否是必须有member_id，也就是member_id > 0，true表示是，这里没有传入会直接抛出异常
+     * @return int
+     * @throws \Framework\Exceptions\NotLoginException
+     */
+    public static function getMemberId($isMust)
+    {
+        if (self::$memberId <= 0 && $isMust) {
+            throw new \Framework\Exceptions\NotLoginException();
+        }
+        return self::$memberId;
     }
 }

@@ -12,5 +12,5 @@ class Member extends \Framework\Libs\Model
     protected $table = 'member';
 
     //主键名
-    //protected $primaryKey = 'userid';
+    protected $primaryKey = 'userid';
 }

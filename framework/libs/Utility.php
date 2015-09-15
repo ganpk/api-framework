@@ -81,7 +81,7 @@ class Utility
     /**
      * 将code的注释刷到code的msg中
      */
-    public function refreshCodeAnnotation()
+    public static function refreshCodeAnnotation()
     {
         $codeClass = '\App\Config\Code';
         $reflect = new \ReflectionClass($codeClass);
@@ -95,7 +95,7 @@ class Utility
             $proComment = preg_replace('/\s/', '', $proComment);
             $proComment = substr($proComment, 4, strpos($proComment, '*@var') - 4);
             $v['msg'] = $proComment;
-//            $codeClass::$k = $v;
+            $codeClass::$$k = $v;
         }
     }
 }

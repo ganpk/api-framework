@@ -6,7 +6,7 @@ namespace Framework\Libs;
  * Class BaseModule
  * @package Framework\Libs;
  */
-class Service
+abstract class Service
 {
     /**
      * 获取某一参数

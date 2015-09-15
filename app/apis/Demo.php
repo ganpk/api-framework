@@ -16,12 +16,12 @@ class Demo extends \Framework\Libs\Api
      */
     public function test()
     {
+        $memberId = \Framework\Libs\Http::getMemberId(false);
+
         //获取需要的参数
         $productId = $this->getParam('productId', 0);
 
-        //获取model数据
-        //$memberModel = \Core\Libs\AppFactory::model('Member');
-        //$result = $memberModel::find(1)->toArray();
+
 
 //        $result = \Core\Libs\AppFactory::module('Demo')->test();
 //        $result = \App\Config\Db::instance()->mysql;

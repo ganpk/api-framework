@@ -6,9 +6,6 @@
  * 产生两个常量 FRAMEWORK_PATH，APP_NAME
  */
 
-error_reporting(E_ALL);
-ini_set('display_errors','On');
-
 //定义框架路径
 define('FRAMEWORK_PATH', dirname(__DIR__));
 

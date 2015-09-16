@@ -13,7 +13,7 @@ class RunMod
     public static function init()
     {
         //引入配置文件，此时
-        $envConfig = require APP_PATH . '/config/Env.php';
+        $envConfig = \App\Config\Env::$rule;
         $hostname = gethostname();
         $runMod = '';
         foreach ($envConfig as $k => $v) {
@@ -28,5 +28,23 @@ class RunMod
             $runMod = $hostname;
         }
         define('RUN_MOD', $runMod);
+
+        self::displayErrors();
     }
+
+    /**
+     * 根据环境决定是否打php错误信息
+     */
+    public static function displayErrors()
+    {
+        if (RUN_MOD != 'produce') {
+            //非生产环境打开错误输出
+            error_reporting(E_ALL);
+            ini_set('display_errors','On');
+        } else {
+            //生产环境不显示错误信息
+            error_reporting(0);
+        }
+    }
+
 }

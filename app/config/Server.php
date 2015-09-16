@@ -1,40 +1,48 @@
 <?php
+namespace App\Config;
+
 /**
  * server 配置文件
+ * Class Server
+ * @package App\Config
  */
-
-$server = [
+class Server
+{
     /**
      * 服务名称，主进程和worker进程会设置为此名称
      * 主进程名：swoole_manager_{name}
      * worker进程名：swoole_{name}
      */
-    'name' => 'item',
+    public static $name = 'item';
 
     /**
      * 监听IP,0.0.0.0表示所有
      */
-    'host' => '0.0.0.0',
+    public static $host = '0.0.0.0';
 
     /**
      * 监听端口
+     * @var int
      */
-    'port' => 80,
+    public static $port = 80;
 
     /**
      * 是否开启原始的post请求，也就是php://input功能
+     * @var bool
      */
-    'isOpenOriginalPostInput' => false,
+    public static $isOpenOriginalPostInput = false;
 
     /**
      * 优先从header某key中获取真实IP,根据实际情况来，如X-Real-IP，如果没有取到则会取PHP全局变量$_SERVER中的remote_addr
+     * @var string
      */
-    'realRemoteAddrHeaderKey' => 'X-Real-IP',
+    public static $realRemoteAddrHeaderKey = 'X-Real-IP';
 
     /**
      * swoole配置项
+     * @var array
      */
-    'swooleSettings' => [
+    public static $swooleSettings = [
         /*
          | 守护进程化。设置daemonize => 1时，程序将转入后台作为守护进程运行。长时间运行的服务器端程序必须启用此项。
          */
@@ -115,7 +123,6 @@ $server = [
         | 此模式下，网络请求的处理是抢占式的，这可以保证总是最空闲的worker进程才会拿到请求去处理。 这个模式的缺点是，客户端连接对应的worker是随机的。不确定哪个worker会处理请求。无法保存连接状态。 当然也可以借助第三方库来实现保存连接状态和会话内容，比如apc/redis/memcache。
         */
         'dispatch_mode' => 3
-    ]
-];
+    ];
 
-return $server;
+}

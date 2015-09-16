@@ -56,10 +56,7 @@ abstract class Api
      */
     public function getParam($key, $default = null)
     {
-        static $rules = array();
-        if (empty($rules)) {
-            $rules = require APP_PATH.'/config/ParamsRule.php';
-        }
+        $rules = \App\Config\ParamsRule::$rules;
         if (!isset($this->params[$key])) {
             $argsCount = func_num_args();
             if ($argsCount == 1) {

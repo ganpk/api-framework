@@ -5,7 +5,7 @@ namespace Framework\Libs;
 define('FRAMEWORK_PATH', dirname(__DIR__));
 //定义应用路径
 define('APP_PATH', dirname(FRAMEWORK_PATH).'/app');
-
+//引入worker初使化脚本
 require FRAMEWORK_PATH.'/bootstrap/initWorker.php';
 /**
  * 测试基类

@@ -153,8 +153,7 @@ class Http
         self::$get = empty(self::$request->get) ? array() : self::$request->get;
 
         //处理请求的POST数据
-        $serverConf = require APP_PATH . '/config/Server.php';
-        if (!empty($serverConf['isOpenOriginalPostInput']) && $serverConf['isOpenOriginalPostInput']) {
+        if (\App\Config\Server::$isOpenOriginalPostInput) {
             //开启了post原始请求
             $postInput = self::$request->rawContent();
             if (!empty($postInput)) {
@@ -173,7 +172,7 @@ class Http
 
         //IP
         self::$ip = '';
-        $realRemoteAddrHeaderKey = empty($serverConf['realRemoteAddrHeaderKey']) ? '' : $serverConf['realRemoteAddrHeaderKey'];
+        $realRemoteAddrHeaderKey = empty(\App\Config\Server::$realRemoteAddrHeaderKey) ? '' : \App\Config\Server::$realRemoteAddrHeaderKey;
         if ($realRemoteAddrHeaderKey != '' && !empty($header[$realRemoteAddrHeaderKey])) {
             self::$ip = $header[$realRemoteAddrHeaderKey];
         }

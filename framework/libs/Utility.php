@@ -11,15 +11,11 @@ class Utility
      */
     public static function converToHump(array $arr)
     {
-        static $map = array();
-        if (empty($map)) {
-            $map = require APP_PATH . '/config/HumpMap.php';
-        }
-
         if (empty($arr)) {
             return array();
         }
         //循环处理key
+        $map = \App\Config\HumpMap::$map;
         $newArr = array();
         foreach ($arr as $k => $v) {
             $splitArr = explode('_', $k);

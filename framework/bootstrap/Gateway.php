@@ -145,10 +145,7 @@ class Gateway
     private static function getCheckParamsErrorInfo()
     {
         //获取获取外部参数规则
-        static $rules = array();
-        if (empty($rules)) {
-            $rules = require APP_PATH.'/config/ParamsRule.php';
-        }
+        $rules = \App\Config\ParamsRule::$rules;
         $params = Http::$post;
         if (count($params) > 0) {
             foreach ($params as $k => $v) {

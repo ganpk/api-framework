@@ -8,7 +8,7 @@ namespace Framework\Bootstrap;
  */
 class HttpServer
 {
-    public static $serverName = '';
+    public $nowTime = '';
     /**
      * 禁止外部实例化
      */
@@ -21,22 +21,11 @@ class HttpServer
      */
     public static function run()
     {
-        //标记运行环境
-        require FRAMEWORK_PATH . '/bootstrap/RunMod.php';
-        \Framework\Bootstrap\RunMod::init();
-
-        //server配置文件
-        $serverConf = require APP_PATH.'/config/Server.php';
-        self::$serverName = $serverConf['name'];
-
         //实例化swoole http server 对象
-        $serv = new \swoole_http_server($serverConf['host'], $serverConf['port']);
+        $serv = new \swoole_http_server(\App\Config\Server::$host, \App\Config\Server::$port);
 
         //配置sever
-        $serv->set($serverConf['swooleSettings']);
-
-        //删除变量，释放内存
-        unset($serverConf);
+        $serv->set(\App\Config\Server::$swooleSettings);
 
         //注册启动主进程回调
         $serv->on('Start', '\Framework\Bootstrap\HttpServer::onStart');
@@ -66,7 +55,7 @@ class HttpServer
     public static function onStart()
     {
         //设置主进程别名
-        $processName = 'swoole_manager_' . self::$serverName;
+        $processName = 'swoole_manager_' . \App\Config\Server::$name;
         swoole_set_process_name($processName);
 
         //生成重启的shell脚本
@@ -94,7 +83,7 @@ class HttpServer
     public static function onWorkerStart($serv, $worker_id)
     {
         //设置进程名称
-        swoole_set_process_name('swoole_' . self::$serverName . '_' . $worker_id);
+        swoole_set_process_name('swoole_' . \App\Config\Server::$name . '_' . $worker_id);
         require FRAMEWORK_PATH . '/bootstrap/InitWorker.php';
     }
 

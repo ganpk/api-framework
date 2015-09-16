@@ -6,7 +6,6 @@ namespace Core\Bootstrap;
  * Class Test
  * @package Core\Bootstrap
  */
-class Test extends PHPUnit_Framework_TestCase
+abstract class Test extends PHPUnit_Framework_TestCase
 {
-
 }

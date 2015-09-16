@@ -57,7 +57,7 @@ class RegistNameSpace
                 }
                 closedir($dh);
             } else {
-                throw new \Core\Exceptions\RegistNamespaceException('不能找开目录' . $dir);
+                throw new \Framework\Exceptions\RegistNamespaceException('不能找开目录' . $dir);
             }
         }
     }

@@ -13,5 +13,6 @@ define('FRAMEWORK_PATH', dirname(__DIR__));
 define('APP_PATH', dirname(FRAMEWORK_PATH).'/app');
 
 //启动服务
+require APP_PATH.'/config/Server.php';
 require_once FRAMEWORK_PATH . '/bootstrap/HttpServer.php';
 \Framework\Bootstrap\HttpServer::run();

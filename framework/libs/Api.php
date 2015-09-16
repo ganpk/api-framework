@@ -81,6 +81,8 @@ abstract class Api
      */
     public function output($codeArr, $result = array(), $extData = array())
     {
-        return array('codeData' => $codeArr, 'result' => $result, 'extData' => $extData);
+        //组装响应数据
+        $responseData = \Framework\Libs\Utility::getOutputData($codeArr, $result, $extData);
+        return $responseData;
     }
 }

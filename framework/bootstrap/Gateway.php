@@ -1,7 +1,6 @@
 <?php
 namespace Framework\Bootstrap;
 
-use Respect\Validation\Validator;
 use Framework\Libs\Http;
 
 /**
@@ -90,42 +89,11 @@ class Gateway
      */
     private static function output($codeData = array(), $result = array(), $extData = array())
     {
-        //准备参数
-        $codeData = empty($codeData) ? array() : $codeData;
-        $result = empty($result) ? array() : $result;
-        $extData = empty($extData) ? array() : $extData;
-
-        //检查参数是否合法
-        if (!Validator::int()->validate($codeData['code'])) {
-            //code参数不合法，写入日志
-            $codeData = \App\Config\Code::$CATCH_EXCEPTION;
-        }
-
-        //统一响应的数据结构
-        $resTplData = [
-            'code' => $codeData['code'],
-            'msg' => $codeData['msg'],
-            'time' => time(),
-            'extData' => $extData,
-            'result' => $result
-        ];
-
-        //转换成驼峰风格
-        $resTplData = \Framework\Libs\Utility::converToHump($resTplData);
-
-        //转换数组为对象，主要是统一result和extData下面不直接使用数据
-        if (is_array($resTplData['result'])) {
-            $resTplData['result'] = json_decode(json_encode($resTplData['result']));
-        }
-        if (is_array($resTplData['extData'])) {
-            $resTplData['extData'] = json_decode(json_encode($resTplData['extData']));
-        }
+        //获取统一响应数据
+        $resData = \Framework\Libs\Utility::getOutputData($codeData, $result, $extData);
 
         //响应给客户端
-        self::response(json_encode($resTplData));
-
-        //关闭mysql连接
-        \Framework\Libs\DbManager::disconnect();
+        self::response($resData);
     }
 
     /**
@@ -138,6 +106,8 @@ class Gateway
         //统一将json数据过滤为驼峰风格
         Http::$response->status = $statusCode;
         Http::$response->end($content);
+        //关闭mysql连接
+        \Framework\Libs\DbManager::disconnect();
     }
 
     /**
@@ -164,15 +134,8 @@ class Gateway
         $api->params = Http::$post;
         $result = $api->{Http::$methodName}();
 
-        if (empty($result['codeData'])) {
-            //响应数据时没有codeData键
-            throw new \Exception('响应数据时没有codeData键');
-        }
-
-        //组装响应数据
-        $result['result'] = empty($result['result']) ? array() : $result['result'];
-        $result['extData'] = empty($result['extData']) ? array() : $result['extData'];
-        self::output($result['codeData'], $result['result'], $result['extData']);
+        //响应数据
+        self::response($result);
     }
 
     /**

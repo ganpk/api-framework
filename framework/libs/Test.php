@@ -1,14 +1,12 @@
 <?php
 namespace Framework\Libs;
 
-
-
-
+//定义框架路径
+define('FRAMEWORK_PATH', dirname(__DIR__));
 //定义应用路径
 define('APP_PATH', dirname(FRAMEWORK_PATH).'/app');
 
 require FRAMEWORK_PATH.'/bootstrap/initWorker.php';
-
 /**
  * 测试基类
  * Class Test

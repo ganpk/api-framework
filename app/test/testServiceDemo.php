@@ -23,10 +23,5 @@ class testDemo extends \Framework\Libs\Test
         $this->markTestIncomplete();
     }
 
-    public function testTest3()
-    {
-        $result = (new \App\Services\Demo())->test();
-        $this->assertNotNull($result);
-        $this->assertArrayHasKey('user_id',$result);
-    }
+
 }

@@ -13,7 +13,7 @@ class Utility
     {
         static $map = array();
         if (empty($map)) {
-            $map = require APP_PATH.'/config/HumpMap.php';
+            $map = require APP_PATH . '/config/HumpMap.php';
         }
 
         if (empty($arr)) {
@@ -97,5 +97,47 @@ class Utility
             $v['msg'] = $proComment;
             $codeClass::$$k = $v;
         }
+    }
+
+    /**
+     * 统一对外输出数据方法
+     * @param array $codeData 定义的Code项
+     * @param array $result 为了统一结构且方便调用者，result必须是对象，不能直接用数组（包含关系数据），
+     * @param array $extData 扩展数据，必须是对象
+     * @return array
+     */
+    public static function getOutputData($codeData = array(), $result = array(), $extData = array())
+    {
+        //准备参数
+        $codeData = empty($codeData) ? array() : $codeData;
+        $result = empty($result) ? array() : $result;
+        $extData = empty($extData) ? array() : $extData;
+
+        //检查参数是否合法
+        if (!\Respect\Validation\Validator::int()->validate($codeData['code'])) {
+            $codeData = \App\Config\Code::$CATCH_EXCEPTION;
+        }
+
+        //统一响应的数据结构
+        $resTplData = [
+            'code' => $codeData['code'],
+            'msg' => $codeData['msg'],
+            'time' => time(),
+            'extData' => $extData,
+            'result' => $result
+        ];
+
+        //转换成驼峰风格
+        $resTplData = \Framework\Libs\Utility::converToHump($resTplData);
+
+        //转换数组为对象，主要是统一result和extData下面不直接使用数据
+        if (is_array($resTplData['result'])) {
+            $resTplData['result'] = json_decode(json_encode($resTplData['result']));
+        }
+        if (is_array($resTplData['extData'])) {
+            $resTplData['extData'] = json_decode(json_encode($resTplData['extData']));
+        }
+        $responseBody = json_encode($resTplData);
+        return $responseBody;
     }
 }

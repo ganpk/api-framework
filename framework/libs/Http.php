@@ -4,7 +4,7 @@ namespace Framework\Libs;
 use Respect\Validation\Validator;
 
 /**
- * HTTP封闭实体
+ * HTTP封装实体类
  */
 class Http
 {
@@ -53,7 +53,7 @@ class Http
      * 登陆了就将memberId放到header中
      * @var int
      */
-    private static $memberId = 0;
+    public static $memberId = 0;
 
     /**
      * 用户签名

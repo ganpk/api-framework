@@ -9,6 +9,8 @@ return array(
     'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
+    'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
+    'Swagger\\' => array($vendorDir . '/zircote/swagger-php/src'),
     'Stringy\\' => array($vendorDir . '/danielstjules/stringy/src'),
     'Respect\\Validation\\' => array($vendorDir . '/respect/validation/library'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),

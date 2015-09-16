@@ -12,7 +12,21 @@ class testDemo extends \Framework\Libs\Test
      */
     public function testTest()
     {
+        //测试数据库
+//        $result = \App\Models\Member::find(945);
+//        $this->assertNotNull($result);
+    }
+
+    public function testTest2()
+    {
+        //标记尚为完成
+        $this->markTestIncomplete();
+    }
+
+    public function testTest3()
+    {
         $result = (new \App\Services\Demo())->test();
-        $this->assertEquals(3, count($result));
+        $this->assertNotNull($result);
+        $this->assertArrayHasKey('user_id',$result);
     }
 }

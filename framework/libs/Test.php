@@ -1,6 +1,14 @@
 <?php
 namespace Framework\Libs;
 
+
+
+
+//定义应用路径
+define('APP_PATH', dirname(FRAMEWORK_PATH).'/app');
+
+require FRAMEWORK_PATH.'/bootstrap/initWorker.php';
+
 /**
  * 测试基类
  * Class Test
@@ -8,22 +16,9 @@ namespace Framework\Libs;
  */
 abstract class Test extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * 构造方法
-     */
-    final public function __construct() {
-        $this->init();
-    }
-
-    /**
-     * 初使化测试的上下文环境
-     */
-    protected function init()
+    final public function __construct()
     {
-        //定义框架路径
-        define('FRAMEWORK_PATH', dirname(__DIR__));
-        //定义应用路径
-        define('APP_PATH', dirname(FRAMEWORK_PATH).'/app');
-        require FRAMEWORK_PATH.'/bootstrap/initWorker.php';
+        //连接数据库
+        \Framework\Libs\DbManager::connect();
     }
 }

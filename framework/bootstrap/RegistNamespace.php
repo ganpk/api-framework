@@ -1,5 +1,5 @@
 <?php
-namespace Core\Bootstrap;
+namespace Framework\Bootstrap;
 
 /**
  * 注册根命名空间对应的目录关系到自动加载类中

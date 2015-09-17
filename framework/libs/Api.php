@@ -12,7 +12,7 @@ abstract class Api
      * 存放当前实例化类
      * @var Object HandlerNamespace
      */
-    protected static $instance = null;
+    protected static $instances = array();
 
     /**
      * 请求当前api的参数
@@ -40,11 +40,11 @@ abstract class Api
      */
     public static function instance()
     {
-        if (self::$instance == null) {
-            $class = get_called_class();
-            self::$instance = new $class();
+        $class = get_called_class();
+        if (self::$instances[$class] == null) {
+            self::$instances[$class] = new $class();
         }
-        return self::$instance;
+        return self::$instances[$class];
     }
 
     /**

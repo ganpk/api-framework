@@ -103,7 +103,6 @@ class Gateway
      */
     private static function response($content = '', $statusCode = 200)
     {
-        //统一将json数据过滤为驼峰风格
         Http::$response->status = $statusCode;
         Http::$response->end($content);
         //关闭mysql连接

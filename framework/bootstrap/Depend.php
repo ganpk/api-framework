@@ -17,7 +17,7 @@ class Depend
             static $logObj = null;
             if ($logObj == null) {
                 $logObj = new \Monolog\Logger('logs');
-                $logFile = 'api.log';
+                $logFile = 'default.log';
                 $log = new \Framework\Libs\LogsHandler($logFile, Logger::WARNING);
                 $logObj->pushHandler($log);
             }

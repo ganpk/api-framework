@@ -180,9 +180,6 @@ class Http
             self::$ip = self::$request->server['remote_addr'];
         }
 
-        //及时清除不用的数组，释放内存
-        unset($serverConf);
-
         //memberId
         self::$memberId = 0;
         if (!empty($header['member_id']) && Validator::int()->min(0)->validate($header['member_id'])) {

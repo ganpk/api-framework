@@ -106,8 +106,6 @@ class Gateway
     {
         Http::$response->status = $statusCode;
         Http::$response->end($content);
-        //关闭mysql连接
-        \Framework\Libs\DbManager::disconnect();
     }
 
     /**

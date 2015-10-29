@@ -22,11 +22,15 @@ class DbManager
      */
     public static function connect()
     {
-        self::$capsule = new Capsule();
-        self::$capsule->addConnection(\App\Config\Db::instance()->mysql);
-        self::$capsule->setAsGlobal();
-        self::$capsule->bootEloquent();
-        self::$capsule->getDatabaseManager()->disconnect();
+        if (self::$capsule == null) {
+            //连接数据库,此时还没有直接连接数据库，只是添加了一个配置，只有程序真正在需要使用数据库时才会连接
+            self::$capsule = new Capsule();
+            self::$capsule->addConnection(\App\Config\Db::instance()->mysql);
+            self::$capsule->setAsGlobal();
+            self::$capsule->bootEloquent();
+        } else {
+            //已经连接过了，则断开后下次再使用ORM会自动连接
+        }
     }
 
     /**

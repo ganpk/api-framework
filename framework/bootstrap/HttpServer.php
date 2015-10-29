@@ -94,8 +94,7 @@ class HttpServer
      */
     public static function onRequest($request, $response)
     {
-        //创建连接数据库资源。
-        //重新连接数据库
+        //连接数据库
         \Framework\Libs\DbManager::connect();
 
         //刷新http实体类数据
@@ -103,6 +102,9 @@ class HttpServer
 
         //调用gateway网关层处理响应
         \Framework\Bootstrap\Gateway::handler();
+        
+        //关闭数据库连接
+        \Framework\Libs\DbManager::disconnect();
         return;
     }
 

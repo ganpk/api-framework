@@ -95,7 +95,6 @@ class HttpServer
     public static function onRequest($request, $response)
     {
         //创建连接数据库资源。
-        //TODO:目前是每次都要连接，为了减少连接次数，需要移到onWorkerStart中，也就是一个worker进程使用一个连接，需要在ORM中处理断线重连
         //重新连接数据库
         \Framework\Libs\DbManager::connect();
 

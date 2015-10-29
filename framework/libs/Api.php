@@ -23,14 +23,14 @@ abstract class Api
     /**
      * 单例模式禁止外部实例化
      */
-    final private function __construct()
+    final protected function __construct()
     {
     }
 
     /**
      * 单例模式禁止外部克隆
      */
-    final private function __clone()
+    final protected function __clone()
     {
     }
 
@@ -41,7 +41,7 @@ abstract class Api
     public static function instance()
     {
         $class = get_called_class();
-        if (self::$instances[$class] == null) {
+        if (!isset(self::$instances[$class])) {
             self::$instances[$class] = new $class();
         }
         return self::$instances[$class];

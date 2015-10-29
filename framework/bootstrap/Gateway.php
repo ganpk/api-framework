@@ -2,6 +2,7 @@
 namespace Framework\Bootstrap;
 
 use Framework\Libs\Http;
+use Respect\Validation\Validator;
 
 /**
  * 应用网关层
@@ -127,14 +128,37 @@ class Gateway
             return;
         }
 
-        //调用相应api，响应数据
+        //检查接口是否存在
         $class = '\\App\\Apis\\' . Http::$className;
+        if (!self::isExistsApi($class, Http::$methodName)) {
+            //请求API不存在
+            self::output(\App\Config\Code::$ELLEGAL_API_URL);
+            return;
+        }
+        
+        //调用api
         $api = $class::instance();
         $api->params = Http::$post;
         $result = $api->{Http::$methodName}();
 
         //响应数据
         self::response($result);
+    }
+    
+    /**
+     * 是否存在请求api
+     * @param unknown $class
+     * @param unknown $methodName
+     */
+    private static function isExistsApi($class,$methodName)
+    {
+        if (!class_exists($class)) {
+            return false;
+        }
+        if (!method_exists($class, $methodName)) {
+            return false;
+        }
+        return true;
     }
 
     /**

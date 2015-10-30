@@ -10,4 +10,6 @@ use \Illuminate\Database\Eloquent\Model as EqtModel;
  */
 abstract class Model extends EqtModel
 {
+    //自动维护数据库表的 created_at 和 updated_at 字段
+    public $timestamps = false;
 }

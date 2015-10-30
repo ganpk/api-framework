@@ -94,17 +94,15 @@ class HttpServer
      */
     public static function onRequest($request, $response)
     {
-        //连接数据库
-        \Framework\Libs\DbManager::connect();
-
         //刷新http实体类数据
         \Framework\Libs\Http::refreshHttpData($request, $response);
 
-        //调用gateway网关层处理响应
-        \Framework\Bootstrap\Gateway::handler();
+        //调用gateway网关层
+        $resContent = \Framework\Bootstrap\Gateway::handler();
         
-        //关闭数据库连接
-        \Framework\Libs\DbManager::disconnect();
+        //响应数据
+        self::response($response, $resContent);
+        
         return;
     }
 
@@ -140,6 +138,18 @@ class HttpServer
     public static function onWorkerError($serv, $worker_id, $worker_pid, $exit_code)
     {
         //记录日志，用于报警和监控Worker进程是否有异常退出
+    }
+    
+    /**
+     * 响应
+     * @param unknown $response 响应对象
+     * @param string $content 响应内容
+     */
+    public static function response($response, $content = '')
+    {
+        $response->status = 200;
+        $response->header('Content-Type','application/json;charset=UTF-8');
+        $response->end($content);
     }
 
 }

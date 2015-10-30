@@ -27,30 +27,48 @@ class Gateway
     public static function handler()
     {
         //检查签名
-        if (!self::checkSignature()) {
-            return;
+        $errOutput = '';
+        if (!self::checkSignature($errOutput)) { //签名错误
+            return self::output($errOutput);
         }
-
+        
+        //检查URL是否合法
+        if (!self::isValidUrl()) {
+            return self::output(\App\Config\Code::$ELLEGAL_API_URL);
+        }
+        
+        //检查并过滤参数
+        $errorInfo = self::getCheckParamsErrorInfo();
+        if (!empty($errorInfo)) {
+            return self::output($errorInfo);
+        }
+        
+        //检查接口是否存在
+        $class = '\\App\\Apis\\' . Http::$className;
+        if (!self::isExistsApi($class, Http::$methodName)) {
+            return self::output(\App\Config\Code::$ELLEGAL_API_URL);
+        }
+        
         try {
-            //分发任务
-            self::dispatcher();
+            //调用API
+            $output = self::callApi();
+            return self::output($output['codeArr'],$output['result'],$output['extData']);
         } catch (\PDOException $e) {
             //操作数据库出错
             \Framework\Libs\Ioc::make('logs')->addError($e->getMessage());
-            self::output(\App\Config\Code::$CATCH_EXCEPTION);
+            return self::output(\App\Config\Code::$CATCH_EXCEPTION);
         } catch(\Framework\Exceptions\NotLoginException $e) {
             //没有登陆
-            self::output(\App\Config\Code::$NOT_LOGIN);
-            return;
+            return self::output(\App\Config\Code::$NOT_LOGIN);
         } catch (\Framework\Exceptions\ParamException $e) {
             //参数出错
             $codeInfo = \App\Config\Code::$ELLEGAL_PARAMS;
             $codeInfo['msg'] = sprintf($codeInfo['msg'], $e->getMessage());
-            self::output($codeInfo);
+            return self::output($codeInfo);
         } catch (\Exception $e) {
             //系统异常
             \Framework\Libs\Ioc::make('logs')->addError($e->getMessage());
-            self::output(\App\Config\Code::$CATCH_EXCEPTION);
+            return self::output(\App\Config\Code::$CATCH_EXCEPTION);
         }
     }
 
@@ -58,7 +76,7 @@ class Gateway
      * 检查签名
      * @return bool
      */
-    private static function checkSignature()
+    private static function checkSignature(&$errOutput = array())
     {
         //检查签名
         if (RUN_MOD != 'produce' && !\App\Config\Secrety::instance()->isCheckSignature) {
@@ -69,13 +87,13 @@ class Gateway
             $signature = Validator::string()->length(1)->validate($signature) ? $signature : '';
             if ($signature == '' || !\Framework\Bootstrap\Auth::isRightPackDataSignature(Http::$request->server['request_uri'], Http::$request->post, $signature)) {
                 //认证未通过
-                self::output(\App\Config\Code::$AUTH_PACK_DATA_FAIL);
+                $errOutput = \App\Config\Code::$AUTH_PACK_DATA_FAIL;
                 return false;
             }
             //检查用户签名是否正确
             if (!\Framework\Bootstrap\Auth::isRightMemberSignature(Http::getMemberId(false), Http::$memberSignature)) {
                 //认证未通过
-                self::output(\App\Config\Code::$AUTH_MEMBER_FAIL);
+                $errOutput = \App\Config\Code::$AUTH_MEMBER_FAIL;
                 return false;
             }
         }
@@ -92,55 +110,39 @@ class Gateway
     {
         //获取统一响应数据
         $resData = \Framework\Libs\Utility::getOutputData($codeData, $result, $extData);
-
         //响应给客户端
-        self::response($resData);
+        return $resData;
     }
 
     /**
-     * 响应
-     * @param string $content 响应内容
-     * @param int $statusCode 响应状态码
+     * 是否是有效的URL
+     * @return boolean
      */
-    private static function response($content = '', $statusCode = 200)
-    {
-        Http::$response->status = $statusCode;
-        Http::$response->end($content);
-    }
-
-    /**
-     * 分发任务
-     */
-    private static function dispatcher()
+    private static function isValidUrl()
     {
         if (Http::$version == '' || Http::$className == '' || Http::$methodName == '') {
             //uri不符合格式
-            self::output(\App\Config\Code::$ELLEGAL_API_URL);
-            return;
+            return false;
         }
-
-        //检查并过滤参数
-        $errorInfo = self::getCheckParamsErrorInfo();
-        if (!empty($errorInfo)) {
-            self::output($errorInfo);
-            return;
-        }
-
-        //检查接口是否存在
-        $class = '\\App\\Apis\\' . Http::$className;
-        if (!self::isExistsApi($class, Http::$methodName)) {
-            //请求API不存在
-            self::output(\App\Config\Code::$ELLEGAL_API_URL);
-            return;
-        }
+        return true;
+    }
+    
+    private static function callApi()
+    {
+        //连接数据库
+        \Framework\Libs\DbManager::connect();
         
-        //调用api
+        //调用API
+        $class = '\\App\\Apis\\' . Http::$className;
+        $method = Http::$methodName;
         $api = $class::instance();
         $api->params = Http::$post;
-        $result = $api->{Http::$methodName}();
-
-        //响应数据
-        self::response($result);
+        $result = $api->{$method}();
+        
+        //关闭数据库连接
+        \Framework\Libs\DbManager::disconnect();
+        
+        return $result;
     }
     
     /**

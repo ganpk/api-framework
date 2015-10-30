@@ -18,6 +18,9 @@ class Utility
         $map = \App\Config\HumpMap::$map;
         $newArr = array();
         foreach ($arr as $k => $v) {
+            if (is_numeric($v)) { // int、float全部转换为string
+                $v = "{$v}";
+            }
             $splitArr = explode('_', $k);
             $newKey = $k;
             if (count($splitArr) > 1) {
@@ -126,13 +129,6 @@ class Utility
         //转换成驼峰风格
         $resTplData = \Framework\Libs\Utility::converToHump($resTplData);
 
-        //转换数组为对象，主要是统一result和extData下面不直接使用数据
-        if (is_array($resTplData['result'])) {
-            $resTplData['result'] = json_decode(json_encode($resTplData['result']));
-        }
-        if (is_array($resTplData['extData'])) {
-            $resTplData['extData'] = json_decode(json_encode($resTplData['extData']));
-        }
         $responseBody = json_encode($resTplData);
         return $responseBody;
     }

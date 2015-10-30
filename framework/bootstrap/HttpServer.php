@@ -103,6 +103,9 @@ class HttpServer
         //响应数据
         self::response($response, $resContent);
         
+        //上报统计中心
+        self::reportStatistic($resContent);
+        
         return;
     }
 
@@ -150,6 +153,28 @@ class HttpServer
         $response->status = 200;
         $response->header('Content-Type','application/json;charset=UTF-8');
         $response->end($content);
+    }
+    
+    /**
+     * 上报统计中心
+     * @param unknown $content
+     */
+    public static function reportStatistic($content)
+    {
+        \Framework\Libs\StatisticClient::tick(\App\Config\Server::$name, \Framework\Libs\Http::$uri);
+        
+        $arr = json_decode($content, true);
+        if (isset($arr['code']) && isset($arr['meg'])) {
+            $success = $arr['code'] === '0' ? true : false;
+            $code = $arr['code'];
+            $msg = $arr['meg'];
+        } else {
+            $success = false;
+            $code = -1111;
+            $msg = '异常';
+        }
+        $reportAddress = 'udp://127.0.0.1:55656';
+        \Framework\Libs\StatisticClient::report(\App\Config\Server::$name, \Framework\Libs\Http::$uri, $success, $code, $msg, $reportAddress);
     }
 
 }

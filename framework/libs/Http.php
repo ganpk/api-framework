@@ -108,6 +108,12 @@ class Http
     public static $uri = '';
 
     /**
+     * 上报到统计中心的api名称
+     * @var unknown
+     */
+    public static $statisticApiName = '';
+    
+    /**
      * 请求版本号
      * @var string
      */
@@ -227,6 +233,11 @@ class Http
         }
         //uri
         self::$uri = self::getUri();
+        
+        //上报到统计中心的api名称
+        $statisticApiName = str_replace('/', '--', self::$uri);//将uri的/转换为--，因为统计中心不支持/字符
+        $statisticApiName = substr($statisticApiName, 2);
+        self::$statisticApiName = $statisticApiName;
 
         //解析uri:uri格式为/v2/products/test
         $uri = strtolower(self::$request->server['request_uri']);

@@ -97,6 +97,11 @@ class HttpServer
         //刷新http实体类数据
         \Framework\Libs\Http::refreshHttpData($request, $response);
 
+        //添加API上报统计中心
+        if (!empty(\App\Config\Staticics::$reportAddr)) {
+            self::addApiStatistic();
+        }
+        
         //调用gateway网关层
         $resContent = \Framework\Bootstrap\Gateway::handler();
         
@@ -156,25 +161,36 @@ class HttpServer
     }
     
     /**
+     * 添加一条API上报
+     */
+    public static function addApiStatistic()
+    {
+        //加入上报列表
+        \Framework\Libs\StatisticClient::tick(\App\Config\Server::$name, \Framework\Libs\Http::$statisticApiName);
+    }
+    
+    /**
      * 上报统计中心
      * @param unknown $content
      */
     public static function reportStatistic($content)
     {
-        \Framework\Libs\StatisticClient::tick(\App\Config\Server::$name, \Framework\Libs\Http::$uri);
-        
-        $arr = json_decode($content, true);
-        if (isset($arr['code']) && isset($arr['meg'])) {
-            $success = $arr['code'] === '0' ? true : false;
-            $code = $arr['code'];
-            $msg = $arr['meg'];
-        } else {
-            $success = false;
-            $code = -1111;
-            $msg = '异常';
+        if (empty(\App\Config\Staticics::$reportAddr)) { //未开启上报功能
+            return;
         }
+        //组装上报信息
+        $resArr = json_decode($content, true);
+        if (!isset($resArr['code']) || !isset($resArr['msg'])) {
+            $resArr = \App\Config\Code::$ELLEGAL_RESPONSE_CONTENT;
+            $msg = empty($content) ? '[空]' : $content;
+            $resArr['msg'] = sprintf($resArr['msg'], $msg);
+        }
+        $isSuccess = $resArr['code'] == '0' ? true : false;
+        $resArr['code'] = $resArr['code'] == '0' ? '1' : $resArr['code']; //将code为0转换为1，否则统计曲线会显示不出来
         $reportAddress = 'udp://127.0.0.1:55656';
-        \Framework\Libs\StatisticClient::report(\App\Config\Server::$name, \Framework\Libs\Http::$uri, $success, $code, $msg, $reportAddress);
+        
+        //开始上报
+        \Framework\Libs\StatisticClient::report(\App\Config\Server::$name, \Framework\Libs\Http::$statisticApiName, $isSuccess, $resArr['code'], $resArr['msg'], $reportAddress);
     }
 
 }

@@ -24,8 +24,8 @@ class RunMod
             }
         }
         if ($runMod == '') {
-            //没有匹配到主机，则默认以主机名表示当前RUN_MOD值
-            $runMod = $hostname;
+            //没有匹配到主机，则默认当前环境为dev
+            $runMod = 'dev';
         }
         define('RUN_MOD', $runMod);
 

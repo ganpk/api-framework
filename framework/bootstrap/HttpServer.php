@@ -187,7 +187,7 @@ class HttpServer
         }
         $isSuccess = $resArr['code'] == '0' ? true : false;
         $resArr['code'] = $resArr['code'] == '0' ? '1' : $resArr['code']; //将code为0转换为1，否则统计曲线会显示不出来
-        $reportAddress = 'udp://127.0.0.1:55656';
+        $reportAddress = \App\Config\Staticics::$reportAddr;
         
         //开始上报
         \Framework\Libs\StatisticClient::report(\App\Config\Server::$name, \Framework\Libs\Http::$statisticApiName, $isSuccess, $resArr['code'], $resArr['msg'], $reportAddress);

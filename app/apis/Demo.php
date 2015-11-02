@@ -8,7 +8,7 @@ use Libs;
  * Class Demo
  * @package App\Apis
  */
-class Demo extends \Framework\Libs\Api
+class Demo extends \App\Apis\BaseApi
 {
     /**
      * 调试方法

@@ -6,7 +6,7 @@ namespace App\Models;
  * Class Member
  * @package Apps\V1\Models
  */
-class Member extends \Framework\Libs\Model
+class Member extends \App\Models\BaseModel
 {
     //表名
     protected $table = 'member';

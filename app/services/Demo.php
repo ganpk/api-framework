@@ -6,7 +6,7 @@ namespace App\Services;
  * Class Demo
  * @package App\Services;
  */
-class Demo extends \Framework\Libs\Service
+class Demo extends \App\Services\BaseService
 {
     /**
      * 调试方法

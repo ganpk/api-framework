@@ -71,14 +71,14 @@ class Http
 
     /**
      * 客户端系统
-     * 调用者要高此信息加入到header中
+     * 调用者要将此信息加入到header中
      * @var string
      */
     public static $clientSystem = '';
 
     /**
      * 客户端平台标识
-     * 调用者要高此信息加入到header中
+     * 调用者要将此信息加入到header中
      * @var string
      */
     public static $clientPlatform = '';
@@ -130,11 +130,6 @@ class Http
      * @var string
      */
     public static $methodName = '';
-
-    /**
-     * @var string 请求的小版本号
-     */
-    public static $smallVersion = '';
 
     /**
      * HTTP构造方法
@@ -245,7 +240,6 @@ class Http
         self::$version = '';
         self::$className = '';
         self::$methodName = '';
-        self::$smallVersion = '';
         if (count($uriParse) == 3) {
             //uri符合格式
             self::$version = strtolower($uriParse[0]);

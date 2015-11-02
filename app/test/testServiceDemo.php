@@ -1,11 +1,11 @@
 <?php
-require '../../framework/libs/Test.php';
+require './BaseTest.php';
 
 /**
  * 测试service的demo类
  * Class testDemo
  */
-class testDemo extends \Framework\Libs\Test
+class testDemo extends \App\Test\BaseTest
 {
     /**
      * 测试调用用的test方法

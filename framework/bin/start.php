@@ -2,7 +2,6 @@
 /**
  * 启动服务
  * cli下运行
- * 接收一个参数，表示项目的名称
  * 产生两个常量 FRAMEWORK_PATH，APP_NAME
  */
 

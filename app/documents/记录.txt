@@ -1,8 +1,0 @@
-ORM说明
-
-model.php
-getConnection
-resolveConnection
-newBaseQueryBuilder
-
-connection.php 580行，解决2006重连问题

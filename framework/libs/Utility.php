@@ -18,9 +18,6 @@ class Utility
         $map = \App\Config\HumpMap::$map;
         $newArr = array();
         foreach ($arr as $k => $v) {
-            if (is_numeric($v)) { // int、float全部转换为string
-                $v = "{$v}";
-            }
             $splitArr = explode('_', $k);
             $newKey = $k;
             if (count($splitArr) > 1) {

@@ -135,7 +135,7 @@ class Gateway
         //调用API
         $class = '\\App\\Apis\\' . Http::$className;
         $method = Http::$methodName;
-        $api = $class::instance();
+        $api = new $class();
         $api->params = Http::$post;
         $result = $api->{$method}();
         

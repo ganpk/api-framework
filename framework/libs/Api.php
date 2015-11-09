@@ -9,42 +9,23 @@ namespace Framework\Libs;
 abstract class Api
 {
     /**
-     * 存放当前实例化类
-     * @var Object HandlerNamespace
-     */
-    protected static $instances = array();
-
-    /**
      * 请求当前api的参数
      * @var array
      */
     public $params = array();
 
     /**
-     * 单例模式禁止外部实例化
+     * 构造
      */
-    final protected function __construct()
+    public function __construct()
     {
     }
 
     /**
-     * 单例模式禁止外部克隆
+     * 克隆
      */
-    final protected function __clone()
+    public function __clone()
     {
-    }
-
-    /**
-     * 获取实例化对象
-     * @return object
-     */
-    public static function instance()
-    {
-        $class = get_called_class();
-        if (!isset(self::$instances[$class])) {
-            self::$instances[$class] = new $class();
-        }
-        return self::$instances[$class];
     }
 
     /**

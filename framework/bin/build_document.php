@@ -25,6 +25,21 @@ require(FRAMEWORK_PATH."/vendor/autoload.php");
 $apiPath = dirname(dirname(__DIR__)).'/app/apis';
 $swagger = \Swagger\scan($apiPath);
 
+//将path前加上版本号
+$swaggerArr = json_decode($swagger, true);
+if (!empty($swaggerArr['paths'])) {
+    $version = $swaggerArr['info']['version'];
+    $paths = array();
+    foreach ($swaggerArr['paths'] as $k => $v) {
+        $key = '/'.$version.$k;
+        $paths[$key] = $v;
+    }
+    $swaggerArr['paths'] = $paths;
+    $swagger = json_encode($swaggerArr);
+}
+
+
+//写入文件
 $res = file_put_contents($filePath,$swagger);
 
 if ($res) {

@@ -126,7 +126,7 @@ class Utility
         //转换成驼峰风格
         $resTplData = \Framework\Libs\Utility::converToHump($resTplData);
 
-        $responseBody = json_encode($resTplData);
+        $responseBody = json_encode($resTplData, JSON_UNESCAPED_UNICODE);
         return $responseBody;
     }
 }

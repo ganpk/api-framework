@@ -183,48 +183,48 @@ class Http
 
         //memberId
         self::$memberId = 0;
-        if (!empty($header['member_id']) && Validator::int()->min(0)->validate($header['member_id'])) {
-            self::$memberId = intval($header['member_id']);
+        if (!empty($header['member-id']) && Validator::int()->min(0)->validate($header['member-id'])) {
+            self::$memberId = intval($header['member-id']);
         }
         //用户签名有效
         self::$memberSignature = '';
-        if (!empty($header['member_signature']) && Validator::string()->validate($header['member_signature'])) {
-            self::$memberSignature = $header['member_signature'];
+        if (!empty($header['member-signature']) && Validator::string()->validate($header['member-signature'])) {
+            self::$memberSignature = $header['member-signature'];
         }
         //数据包签名
         self::$dataSignature = '';
-        if (!empty($header['data_signature']) && Validator::string()->validate($header['data_signature'])) {
-            self::$dataSignature = $header['data_signature'];
+        if (!empty($header['data-signature']) && Validator::string()->validate($header['data-signature'])) {
+            self::$dataSignature = $header['data-signature'];
         }
         //客户端唯一身份标识
         self::$clientIdCard = '';
-        if (!empty($header['client_id_card']) && Validator::string()->validate($header['client_id_card'])) {
-            self::$clientIdCard = $header['client_id_card'];
+        if (!empty($header['client-idcard']) && Validator::string()->validate($header['client-idcard'])) {
+            self::$clientIdCard = $header['client-idcard'];
         }
         //客户端系统标识
         self::$clientSystem = '';
-        if (!empty($header['client_system']) && Validator::string()->validate($header['client_system'])) {
-            self::$clientSystem = $header['client_system'];
+        if (!empty($header['client-system']) && Validator::string()->validate($header['client-system'])) {
+            self::$clientSystem = $header['client-system'];
         }
         //客户端平台标识
         self::$clientPlatform = '';
-        if (!empty($header['client_platform']) && Validator::string()->validate($header['client_platform'])) {
-            self::$clientPlatform = $header['client_platform'];
+        if (!empty($header['client-platform']) && Validator::string()->validate($header['client-platform'])) {
+            self::$clientPlatform = $header['client-platform'];
         }
         //客户端APP版本标识
         self::$clientAppVersion = '';
-        if (!empty($header['client_app_version']) && Validator::string()->validate($header['client_app_version'])) {
-            self::$clientAppVersion = $header['client_app_version'];
+        if (!empty($header['client-app-version']) && Validator::string()->validate($header['client-app-version'])) {
+            self::$clientAppVersion = $header['client-app-version'];
         }
         //客户端设备类型标识
         self::$clientDeviceModel = '';
-        if (!empty($header['client_device_model']) && Validator::string()->validate($header['client_device_model'])) {
-            self::$clientDeviceModel = $header['client_device_model'];
+        if (!empty($header['client-device-model']) && Validator::string()->validate($header['client-device-model'])) {
+            self::$clientDeviceModel = $header['client-device-model'];
         }
         //客户端系统版本标识
         self::$clientSystemVersion = '';
-        if (!empty($header['client_system_version']) && Validator::string()->validate($header['client_system_version'])) {
-            self::$clientSystemVersion = $header['client_system_version'];
+        if (!empty($header['client-system-version']) && Validator::string()->validate($header['client-system-version'])) {
+            self::$clientSystemVersion = $header['client-system-version'];
         }
         //uri
         self::$uri = self::getUri();

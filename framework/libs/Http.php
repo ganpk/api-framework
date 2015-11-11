@@ -235,7 +235,7 @@ class Http
         self::$statisticApiName = $statisticApiName;
 
         //解析uri:uri格式为/v2/products/test
-        $uri = strtolower(self::$request->server['request_uri']);
+        $uri = self::$request->server['request_uri'];
         $uriParse = explode('/', trim($uri, '/'));
         self::$version = '';
         self::$className = '';
@@ -243,7 +243,7 @@ class Http
         if (count($uriParse) == 3) {
             //uri符合格式
             self::$version = strtolower($uriParse[0]);
-            self::$className = ucfirst(strtolower($uriParse[1]));
+            self::$className = $uriParse[1];
             self::$methodName = $uriParse[2];
         }
     }

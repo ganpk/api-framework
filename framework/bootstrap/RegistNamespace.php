@@ -32,7 +32,6 @@ class RegistNameSpace
      */
     public function register()
     {
-        $this->classLoader->getUseIncludePath();
         //注册framework目录
         $this->scanDirToClassMap(FRAMEWORK_PATH,'Framework',['vendor']);
 

@@ -14,66 +14,66 @@ class Code
      * success
      * @var array
      */
-    public static $SUCCESS = ['code' => '0', 'msg' => 'success'];
+    public static $SUCCESS = ['code' => 0, 'msg' => 'success'];
 
     /**
      * 系统异常
      * @var array
      */
-    public static $CATCH_EXCEPTION = ['code' => '10', 'msg' => 'sorry, system catch exception'];
+    public static $CATCH_EXCEPTION = ['code' => 10, 'msg' => 'sorry, system catch exception'];
 
     /**
      * 系统繁忙
      * @var array
      */
-    public static $SYSTEM_BUSY = ['code' => '11', 'msg' => 'system busy, please try again later'];
-
-    /**
-     * 认证用户失败
-     * @var array
-     */
-    public static $AUTH_MEMBER_FAIL = ['code' => '12'];
-
-    /**
-     * 认失数据包失败
-     * @var array
-     */
-    public static $AUTH_PACK_DATA_FAIL = ['code' => '13'];
-
-    /**
-     * 请求API不存在
-     * @var array
-     */
-    public static $ELLEGAL_API_URL = ['code' => '14'];
+    public static $SYSTEM_BUSY = ['code' => 11, 'msg' => 'system busy, please try again later'];
 
     /**
      * 响应内容错误，如果响应格式，会将此上报给统计中心
      * @var array
      */
-    public static $ELLEGAL_RESPONSE_CONTENT = ['code' => '15','msg'=>'响应内容格式不正确:%s'];
+    public static $ELLEGAL_RESPONSE_CONTENT = ['code' => 12,'msg'=>'响应内容格式不正确:%s'];
     
+    /**
+     * 认证用户失败
+     * @var array
+     */
+    public static $AUTH_MEMBER_FAIL = ['code' => 101];
+
+    /**
+     * 认失数据包失败
+     * @var array
+     */
+    public static $AUTH_PACK_DATA_FAIL = ['code' => 102];
+
+    /**
+     * 请求API不存在
+     * @var array
+     */
+    public static $ELLEGAL_API_URL = ['code' => 103];
+
     /**
      * 用户没有登陆
      * @var array
      */
-    public static $NOT_LOGIN = ['code' => '101'];
+    public static $NOT_LOGIN = ['code' => 104];
 
     /**
      * 参数异常：%s
      * @var array
      */
-    public static $ELLEGAL_PARAMS = ['code' => '102'];
+    public static $ELLEGAL_PARAMS = ['code' => 105];
 
     /**
      * 未找到数据
      * @var array
      */
-    public static $EMPTY_DATA = ['code' => '1000'];
+    public static $EMPTY_DATA = ['code' => 1000];
 
     /**
      * 无效的json数据
      * @var array
      */
-    public static $ILLEGAL_JSON = ['code' => '1001'];
+    public static $ILLEGAL_JSON = ['code' => 1001];
 }
 

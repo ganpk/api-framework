@@ -178,6 +178,7 @@ class HttpServer
         if (empty(\App\Config\Staticics::$reportAddr)) { //未开启上报功能
             return;
         }
+        
         //组装上报信息
         $resArr = json_decode($content, true);
         if (!isset($resArr['code']) || !isset($resArr['msg'])) {
@@ -185,8 +186,18 @@ class HttpServer
             $msg = empty($content) ? '[空]' : $content;
             $resArr['msg'] = sprintf($resArr['msg'], $msg);
         }
-        $isSuccess = $resArr['code'] == '0' ? true : false;
-        $resArr['code'] = $resArr['code'] == '0' ? '1' : $resArr['code']; //将code为0转换为1，否则统计曲线会显示不出来
+        
+        //标记正确与否
+        $isSuccess = true;
+        if ($resArr['code'] !=0 ) {
+            $errCodeArr = [
+                \App\Config\Code::$CATCH_EXCEPTION['code'], //异常
+                \App\Config\Code::$ELLEGAL_RESPONSE_CONTENT['code'], //响应内容不符合约定
+            ];
+            if (in_array($resArr['code'], $errCodeArr)) {
+                $isSuccess = false;
+            }
+        }
         $reportAddress = \App\Config\Staticics::$reportAddr;
         
         //开始上报

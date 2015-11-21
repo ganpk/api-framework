@@ -37,10 +37,10 @@ abstract class Api
      */
     public function getParam($key, $default = null)
     {
-        $rules = \App\Config\ParamsRule::$rules;
         if (!isset($this->params[$key])) {
             $argsCount = func_num_args();
             if ($argsCount == 1) {
+                $rules = \App\Config\ParamsRule::getRules();
                 throw new \Framework\Exceptions\ParamException($rules[$key]['desc'] . " （{$key}）参数缺失");
             } else {
                 return $default;

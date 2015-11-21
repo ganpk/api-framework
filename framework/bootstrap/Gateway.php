@@ -168,7 +168,7 @@ class Gateway
     private static function getCheckParamsErrorInfo()
     {
         //获取获取外部参数规则
-        $rules = \App\Config\ParamsRule::$rules;
+        $rules = \App\Config\ParamsRule::getRules();
         $params = Http::$post;
         if (count($params) > 0) {
             foreach ($params as $k => $v) {
@@ -178,7 +178,7 @@ class Gateway
                     continue;
                 } else {
                     //在规则中，则验证是否符合规则
-                    if (!self::validatorParam($v, $rules[$k])) {
+                    if (!self::validatorParam(Http::$post[$k], $rules[$k])) {
                         $codeArr = \App\Config\Code::$ELLEGAL_PARAMS;
                         $codeArr['msg'] = sprintf($codeArr['msg'], $rules[$k]['desc'] . '错误');
                         return $codeArr;
@@ -192,42 +192,24 @@ class Gateway
     /**
      * 根据规则验证参数是否符合规则
      * @param mixed $value 验证参数值
-     * @param array $rule 规则
+     * @param array $filter 配置的过滤规则
      * @return boolean
-     * TODO:此方法有点low,后面再优化吧
      */
-    private static function validatorParam($value, $rule)
+    private static function validatorParam(&$value, $filter)
     {
-        foreach ($rule as $k => $v) {
-            switch ($k) {
-                case 'type':
-                    if (!Validator::$v()->validate($value)) {
-                        return false;
-                    }
-                    break;
-                case 'min':
-                    if ($rule['type'] == 'int') {
-                        if ($value < $v) {
-                            return false;
-                        }
-                    } elseif ($rule['type'] == 'string') {
-                        if (strlen($value) < $v) {
-                            return false;
-                        }
-                    }
-                    break;
-                case 'max':
-                    if ($rule['type'] == 'int') {
-                        if ($value > $v) {
-                            return false;
-                        }
-                    } elseif ($rule['type'] == 'string') {
-                        if (strlen($value) > $v) {
-                            return false;
-                        }
-                    }
-                    break;
+        if (!empty($filter['rule']) && isset($filter['rule']['type'])) {
+            //通过配置的Validator规则过滤
+            $type = $filter['rule']['type'];
+            $validator = Validator::$filter['rule']['type']();
+            if (!empty($filter['rule']['conds'])) {
+                foreach ($filter['rule']['conds'] as $k => $v) {
+                    $validator = call_user_func_array([$validator, $k], $v);
+                }
             }
+            return $validator->validate($value);
+        } elseif($filter['func']) {
+            //通过自定义函数过滤
+            return $filter['func']($value);
         }
         return true;
     }

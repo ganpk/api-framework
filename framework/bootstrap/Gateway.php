@@ -197,6 +197,7 @@ class Gateway
      */
     private static function validatorParam(&$value, $filter)
     {
+        $isRight = true;
         if (!empty($filter['rule']) && isset($filter['rule']['type'])) {
             //通过配置的Validator规则过滤
             $type = $filter['rule']['type'];
@@ -206,11 +207,12 @@ class Gateway
                     $validator = call_user_func_array([$validator, $k], $v);
                 }
             }
-            return $validator->validate($value);
-        } elseif($filter['func']) {
-            //通过自定义函数过滤
-            return $filter['func']($value);
+            $isRight = $validator->validate($value);
         }
-        return true;
+        if($isRight && isset($filter['func'])) {
+            //通过自定义函数过滤
+            $isRight = $filter['func']($value);
+        }
+        return $isRight;
     }
 }

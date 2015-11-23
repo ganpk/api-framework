@@ -52,6 +52,16 @@ abstract class Api
             return $this->params[$key];
         }
     }
+    
+    /**
+     * 获取当前操作用户的ID
+     * @param boolean $isMust 是否必须, 如果为true，但用户id无效会返回 NOT_LOGIN错误码 ，如果为false, 没有会返回0
+     * @return int
+     */
+    public function getMemberId($isMust)
+    {
+        return \Framework\Libs\Http::getMemberId($isMust);
+    }
 
     /**
      * 统一响应

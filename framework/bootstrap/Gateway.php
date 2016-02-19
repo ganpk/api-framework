@@ -174,7 +174,7 @@ class Gateway
             foreach ($params as $k => $v) {
                 if (empty($rules[$k])) {
                     //规则中没有定义，则踢出参数中
-                    unset(Http::$request->post[$k]);
+                    unset(Http::$post[$k]);
                     continue;
                 } else {
                     //在规则中，则验证是否符合规则

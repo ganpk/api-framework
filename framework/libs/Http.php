@@ -173,7 +173,7 @@ class Http
 
         //IP
         self::$ip = '';
-        $realRemoteAddrHeaderKey = empty(\App\Config\Server::$realRemoteAddrHeaderKey) ? '' : \App\Config\Server::$realRemoteAddrHeaderKey;
+        $realRemoteAddrHeaderKey = empty(\App\Config\Server::$realRemoteAddrHeaderKey) ? '' : strtolower(\App\Config\Server::$realRemoteAddrHeaderKey);
         if ($realRemoteAddrHeaderKey != '' && !empty($header[$realRemoteAddrHeaderKey])) {
             self::$ip = $header[$realRemoteAddrHeaderKey];
         }

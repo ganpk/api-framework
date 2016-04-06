@@ -13,6 +13,12 @@ use Respect\Validation\Validator;
 class Gateway
 {
     /**
+     * 异常信息
+     * @var string
+     */
+    public static $exceptionMsg = '';
+    
+    /**
      * 构造方法
      * 静态类禁止实例化
      */
@@ -26,6 +32,8 @@ class Gateway
      */
     public static function handler()
     {
+        self::$exceptionMsg = '';
+        
         //检查签名
         $errOutput = '';
         if (!self::checkSignature($errOutput)) { //签名错误
@@ -67,7 +75,8 @@ class Gateway
             return self::output($codeInfo);
         } catch (\Exception $e) {
             //系统异常
-            \Framework\Libs\Ioc::make('logs')->addError($e->getMessage());
+            self::$exceptionMsg = $e->getMessage();
+            \Framework\Libs\Ioc::make('logs')->addError(self::$exceptionMsg);
             return self::output(\App\Config\Code::$CATCH_EXCEPTION);
         }
     }

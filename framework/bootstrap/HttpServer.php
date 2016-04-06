@@ -190,6 +190,7 @@ class HttpServer
         //标记正确与否
         $isSuccess = true;
         if ($resArr['code'] !=0 ) {
+            //视为不正确的code数组
             $errCodeArr = [
                 \App\Config\Code::$CATCH_EXCEPTION['code'], //异常
                 \App\Config\Code::$ELLEGAL_RESPONSE_CONTENT['code'], //响应内容不符合约定
@@ -197,6 +198,11 @@ class HttpServer
             if (in_array($resArr['code'], $errCodeArr)) {
                 $isSuccess = false;
             }
+            if ($resArr['code'] == 10) {
+                //系统异常则将具体异常信息上传上去
+                $resArr['msg'] = $resArr['msg'].':'.\Framework\Bootstrap\Gateway::$exceptionMsg;
+            }
+            
         }
         $reportAddress = \App\Config\Staticics::$reportAddr;
         

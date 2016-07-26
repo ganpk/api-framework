@@ -17,9 +17,10 @@ class Depend
             static $logObj = null;
             if ($logObj == null) {
                 $logObj = new \Monolog\Logger('logs');
-                $logFile = 'default.log';
-                $log = new \Framework\Libs\LogsHandler($logFile, Logger::WARNING);
-                $logObj->pushHandler($log);
+                $logFile = APP_PATH.'/storage/logs/default.log';
+                //按天记录debug日志
+                $rotatingHandler = new \Monolog\Handler\RotatingFileHandler($logFile, 30, Logger::DEBUG);
+                $logObj->pushHandler($rotatingHandler);
             }
             return $logObj;
         });

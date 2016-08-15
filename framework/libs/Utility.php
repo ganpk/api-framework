@@ -110,7 +110,7 @@ class Utility
         $extData = empty($extData) ? array() : $extData;
 
         //检查参数是否合法
-        if (!\Respect\Validation\Validator::int()->validate($codeData['code'])) {
+        if (!\Respect\Validation\Validator::intVal()->validate($codeData['code'])) {
             $codeData = \App\Config\Code::$CATCH_EXCEPTION;
         }
 

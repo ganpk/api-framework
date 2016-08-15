@@ -1,6 +1,6 @@
 {
   "require": {
-    "respect/validation": "0.9.3",
+    "respect/validation": "1.1.4",
     "league/url": "3.3.5",
     "illuminate/database": "5.0.33",
     "monolog/monolog": "1.16.0",

@@ -19,7 +19,7 @@ class ParamsRule
             'productId' => [
                 'desc' => '商品ID',
                 'rule' => [
-                    'type' => 'int',
+                    'type' => 'intVal',
                     'conds' => [
                         'min' => [1],
                     ]
@@ -29,7 +29,7 @@ class ParamsRule
             'memberId' => [
                 'desc' => '用户ID',
                 'rule' => [
-                    'type' => 'int',
+                    'type' => 'intVal',
                     'conds' => [
                         'min' => [1],
                     ]
@@ -39,7 +39,7 @@ class ParamsRule
             'currentPage' => [
                 'desc' => '当前页数',
                 'rule' => [
-                    'type' => 'int',
+                    'type' => 'intVal',
                     'conds' => [
                         'min' => [1],
                     ]
@@ -49,7 +49,7 @@ class ParamsRule
             'pageSize' => [
                 'desc' => '每页条数',
                 'rule' => [
-                    'type' => 'int',
+                    'type' => 'intVal',
                     'conds' => [
                         'min' => [1],
                     ]
@@ -59,7 +59,7 @@ class ParamsRule
             'activityId' => [
                 'desc' => '特卖ID',
                 'rule' => [
-                    'type' => 'int',
+                    'type' => 'intVal',
                     'conds' => [
                         'min' => [1],
                     ]

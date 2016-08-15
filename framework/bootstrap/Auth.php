@@ -15,7 +15,7 @@ class Auth
      */
     public static function getMemberSignature($memberId)
     {
-        if (Validator::int()->min(0)->validate($memberId)) {
+        if (Validator::intVal()->min(0)->validate($memberId)) {
             //TODO:对用户签名的加密算法，建议改为用户表中的password，这样可以解决1.用户修改密码后重新登陆，2.也解决了防外不防内的问题
             return substr(md5($memberId . \App\Config\Secrety::instance()->signatureMemberToken), 8, 16);
         }

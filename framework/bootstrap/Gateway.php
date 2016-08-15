@@ -93,7 +93,7 @@ class Gateway
         } else {
             //检查数据包的签名是否正确
             $signature = empty(Http::$dataSignature) ? '' : Http::$dataSignature;
-            $signature = Validator::string()->length(1)->validate($signature) ? $signature : '';
+            $signature = Validator::stringType()->length(1)->validate($signature) ? $signature : '';
             if ($signature == '' || !\Framework\Bootstrap\Auth::isRightPackDataSignature(Http::$request->server['request_uri'], Http::$request->post, $signature)) {
                 //认证未通过
                 $errOutput = \App\Config\Code::$AUTH_PACK_DATA_FAIL;

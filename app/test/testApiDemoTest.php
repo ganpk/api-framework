@@ -11,8 +11,11 @@ class testApiDemoTest extends \App\Test\BaseTest
         //模拟数据
         \Framework\Libs\Http::$memberId = 945;
 
-        $result = \App\Apis\Demo::instance()->test();
-
+        $params = [
+            'productId'=>5,
+            'crowdFundStatus' => 'funding'
+        ];
+        $result = $this->callApi('Demo', 'test', $params);
         //不为空
         $this->assertNotEmpty($result);
         

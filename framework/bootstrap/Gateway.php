@@ -73,6 +73,9 @@ class Gateway
             $codeInfo = \App\Config\Code::$ELLEGAL_PARAMS;
             $codeInfo['msg'] = sprintf($codeInfo['msg'], $e->getMessage());
             return self::output($codeInfo);
+        } catch (\App\Exceptions\ServiceException $e) {
+            //SERVICE抛错
+            return self::output($e->getResponseCodeInfo());
         } catch (\Exception $e) {
             //系统异常
             self::$exceptionMsg = $e->getMessage();
@@ -174,7 +177,7 @@ class Gateway
      * 获取检查参数的错误信息
      * @return array 返回错误信息code数组，如果为空表示参数正确
      */
-    private static function getCheckParamsErrorInfo()
+    public static function getCheckParamsErrorInfo()
     {
         //获取获取外部参数规则
         $rules = \App\Config\ParamsRule::getRules();

@@ -34,7 +34,8 @@ class Demo extends \App\Apis\BaseApi
 
         //获取需要的参数
         $productId = $this->getParam('productId', 0);
-        $result = (new \App\Services\Demo())->test();
+        $crowdFundStatus = $this->getParam('crowdFundStatus', '');
+        $result = (new \App\Services\Demo())->test($productId,$crowdFundStatus);
         return $this->output(\App\Config\Code::$SUCCESS, $result);
     }
 

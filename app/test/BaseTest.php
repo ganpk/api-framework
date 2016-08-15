@@ -28,7 +28,12 @@ abstract class BaseTest extends \Framework\Libs\Test
         $classPath = '\App\Apis\\'.$class;
         $obj = new $classPath();
         $obj->params = \Framework\Libs\Http::$post;
-        $data = $obj->{$method}();
+        try {
+            $data = $obj->{$method}();
+        } catch (\App\Exceptions\ServiceException $e) {
+            $data = ['codeArr' => [], 'result' => [], 'extData' => []];
+            $data['codeArr'] = $e->getResponseCodeInfo();
+        }
         $data = \Framework\Libs\Utility::converToHump($data);
         $data = \Framework\Libs\Utility::getOutputData($data['codeArr'], $data['result'], $data['extData']);
         if ($dataType == 'json') {

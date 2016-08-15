@@ -68,16 +68,13 @@ class ParamsRule
             
             'crowdFundStatus' => [
                 'desc' => '伙拼状态',
-                'func' => function ($value) {
-                    $allow = [
+                'rule' => [
+                    'type' => 'inArray',
+                    'conds' => [
                         'funding',
                         'foreshow'
-                    ];
-                    if (in_array($value, $allow)) {
-                        return true;
-                    }
-                    return false;
-                }
+                    ]
+                ]
             ]
         ];
         return $rules;

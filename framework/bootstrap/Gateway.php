@@ -210,13 +210,24 @@ class Gateway
         if (!empty($filter['rule']) && isset($filter['rule']['type'])) {
             //通过配置的Validator规则过滤
             $type = $filter['rule']['type'];
-            $validator = Validator::$filter['rule']['type']();
-            if (!empty($filter['rule']['conds'])) {
-                foreach ($filter['rule']['conds'] as $k => $v) {
-                    $validator = call_user_func_array([$validator, $k], $v);
+            
+            //检查是否有自定义过滤方法可以调用
+            $libsValidator = new \App\Libs\Validator();
+            if( is_callable([$libsValidator, 'is'.ucfirst($type)]) ){
+                if(in_array($type, ['inArray'])){
+                    $isRight = call_user_func_array([$libsValidator, 'is'.ucfirst($type)], [$value, $filter['rule']['conds']]);
+                }else{
+                    $isRight = call_user_func_array([$libsValidator, 'is'.ucfirst($type)], $value);
                 }
+            }else{
+                $validator = Validator::$type();
+                if (!empty($filter['rule']['conds'])) {
+                    foreach ($filter['rule']['conds'] as $k => $v) {
+                        $validator = call_user_func_array([$validator, $k], $v);
+                    }
+                }
+                $isRight = $validator->validate($value);
             }
-            $isRight = $validator->validate($value);
         }
         if($isRight && isset($filter['func'])) {
             //通过自定义函数过滤

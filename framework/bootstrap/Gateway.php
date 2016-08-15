@@ -217,7 +217,7 @@ class Gateway
                 if(in_array($type, ['inArray'])){
                     $isRight = call_user_func_array([$libsValidator, 'is'.ucfirst($type)], [$value, $filter['rule']['conds']]);
                 }else{
-                    $isRight = call_user_func_array([$libsValidator, 'is'.ucfirst($type)], $value);
+                    $isRight = call_user_func_array([$libsValidator, 'is'.ucfirst($type)], [$value]);
                 }
             }else{
                 $validator = Validator::$type();

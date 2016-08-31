@@ -8,4 +8,16 @@ namespace App\Models;
  */
 class BaseModel extends \Framework\Libs\Model
 {
+    /**
+     * 将查询结果对象转换为数组
+     * (non-PHPdoc)
+     * @see \Illuminate\Database\Eloquent\Model::toArray()
+     */
+    public function toArray() {
+        $res = [];
+        if (count($this)) {
+            $res = parent::toArray();
+        }
+        return $res;
+    }
 }
